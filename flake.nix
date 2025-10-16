@@ -1350,7 +1350,7 @@
                                                             in "${ derivation }"
                                                        else if value == "directory" then builtins.mapAttrs ( mapper ( builtins.concatLists [ path [ name ] ] ) ) ( builtins.readDir ( builtins.concatStringsSep "/" ( builtins.concatLists [ path [ name ] ] ) ) )
                                                        else builtins.throw "We can not handle ${ value }." ;
-                                                in builtins.mapAttrs ( mapper [ ( builtins.toString secrets ) ] ) ( builtins.readDir ( builtins.toString secrets ) ) ;
+                                                in builtins.trace "🔍 entering secrets" ( builtins.mapAttrs ( mapper [ ( builtins.toString secrets ) ] ) ( builtins.readDir ( builtins.toString secrets ) ) ) ;
                                         in
                                             {
                                                 config =
