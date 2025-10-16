@@ -1280,13 +1280,14 @@
                                                                     } ;
                                                             } ;
                                                 in
-                                                    builtins.trace "🔍 entering resources_" (
+                                                    builtins.trace "🔍 entering resources_ in" (
                                                     visitor.lib.implementation
                                                         {
                                                             lambda =
                                                                 path : value :
                                                                     let
                                                                         resource-factory =
+                                                                            builtins.trace "🔍 entering resources_ resources.lib.factories.generic" (
                                                                             resources.lib.factories.generic
                                                                                 {
                                                                                     buildFHSUserEnv = pkgs.buildFHSUserEnv ;
@@ -1307,7 +1308,7 @@
                                                                                     visitor = visitor ;
                                                                                     writeShellApplication = pkgs.writeShellApplication ;
                                                                                     yq-go = pkgs.yq-go ;
-                                                                                } ;
+                                                                                } );
                                                                         point =
                                                                             let
                                                                                 identity =
