@@ -19,6 +19,7 @@
                             failure_ = failure.lib { coreutils = pkgs.coreutils ; jq = pkgs.jq ; mkDerivation = pkgs.stdenv.mkDerivation ; visitor = visitor ; writeShellApplication = pkgs.writeShellApplication ; yq-go = pkgs.yq-go ; } ;
                             pkgs = builtins.getAttr system nixpkgs.legacyPackages ;
                             user =
+                                builtins.trace "user..." (
                                 { config , lib , pkgs , ... } :
                                     let
                                         password-less-wrap =
@@ -1802,7 +1803,7 @@
                                                                         } ;
                                                             } ;
                                                     } ;
-                                            } ;
+                                            } ) ;
                             in
                                 {
                                     checks =
