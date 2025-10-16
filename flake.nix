@@ -23,7 +23,7 @@
                                 { config , lib , pkgs , ... } :
                                     let
                                         password-less-wrap =
-                                            derivation : target :
+                                            builtins.trace "🔍 entering password-less-wrap" ( derivation : target :
                                                 pkgs.writeShellApplication
                                                     {
                                                         name = target ;
@@ -37,9 +37,9 @@
                                                                     sudo ${ target } "$@"
                                                                 fi
                                                             '' ;
-                                                    } ;
+                                                    } ) ;
                                         password-less-core =
-                                            derivation : target :
+                                            builtins.trace "🔍 entering passwordless-core" ( derivation : target :
                                                 pkgs.writeShellApplication
                                                     {
                                                         name = target ;
@@ -53,7 +53,7 @@
                                                                     ${ target } "$@"
                                                                 fi
                                                             '' ;
-                                                    } ;
+                                                    } ) ;
                                         resources_ =
                                             let
                                                 seed =
