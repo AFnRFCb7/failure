@@ -1807,17 +1807,17 @@
                                 {
                                     checks =
                                         let
-                                            failure = failure_.check { coreutils = pkgs.coreutils ; jq = pkgs.jq ; mkDerivation = pkgs.stdenv.mkDerivation ; writeShellApplication = pkgs.writeShellApplication ; yq-go = pkgs.yq-go ; } ;
-                                            log-event-listener =
-                                                resources.lib.listeners.log-event-listener
-                                                    {
-                                                        coreutils = pkgs.coreutils ;
-                                                        flock = pkgs.flock ;
-                                                        redis = pkgs.redis ;
-                                                        resources-directory = "/build/resources" ;
-                                                        writeShellApplication = pkgs.writeShellApplication ;
-                                                        yq-go = pkgs.yq-go ;
-                                                    } ;
+                                            # failure = failure_.check { coreutils = pkgs.coreutils ; jq = pkgs.jq ; mkDerivation = pkgs.stdenv.mkDerivation ; writeShellApplication = pkgs.writeShellApplication ; yq-go = pkgs.yq-go ; } ;
+                                            # log-event-listener =
+                                            #     resources.lib.listeners.log-event-listener
+                                            #         {
+                                            #             coreutils = pkgs.coreutils ;
+                                            #             flock = pkgs.flock ;
+                                            #             redis = pkgs.redis ;
+                                            #             resources-directory = "/build/resources" ;
+                                            #             writeShellApplication = pkgs.writeShellApplication ;
+                                            #             yq-go = pkgs.yq-go ;
+                                            #         } ;
                                             test-home =
                                                 name :
                                                     {
