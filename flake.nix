@@ -1280,6 +1280,7 @@
                                                                     } ;
                                                             } ;
                                                 in
+                                                    builtins.trace "🔍 entering resources_" (
                                                     visitor.lib.implementation
                                                         {
                                                             lambda =
@@ -1328,7 +1329,7 @@
                                                                                 in identity ( value null ) ;
                                                                         in resource-factory.implementation ;
                                                         }
-                                                        tree ;
+                                                        tree ) ;
                                         secrets_ =
                                             let
                                                 mapper =
