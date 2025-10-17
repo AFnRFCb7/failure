@@ -1810,17 +1810,17 @@
                         {
                             checks =
                                 let
-                                    # failure = failure_.check { coreutils = pkgs.coreutils ; jq = pkgs.jq ; mkDerivation = pkgs.stdenv.mkDerivation ; writeShellApplication = pkgs.writeShellApplication ; yq-go = pkgs.yq-go ; } ;
-                                    # log-event-listener =
-                                    #     resources.lib.listeners.log-event-listener
-                                    #         {
-                                    #             coreutils = pkgs.coreutils ;
-                                    #             flock = pkgs.flock ;
-                                    #             redis = pkgs.redis ;
-                                    #             resources-directory = "/build/resources" ;
-                                    #             writeShellApplication = pkgs.writeShellApplication ;
-                                    #             yq-go = pkgs.yq-go ;
-                                    #         } ;
+                                    failure = failure_.check { coreutils = pkgs.coreutils ; jq = pkgs.jq ; mkDerivation = pkgs.stdenv.mkDerivation ; writeShellApplication = pkgs.writeShellApplication ; yq-go = pkgs.yq-go ; } ;
+                                    log-event-listener =
+                                        resources.lib.listeners.log-event-listener
+                                            {
+                                                coreutils = pkgs.coreutils ;
+                                                flock = pkgs.flock ;
+                                                redis = pkgs.redis ;
+                                                resources-directory = "/build/resources" ;
+                                                writeShellApplication = pkgs.writeShellApplication ;
+                                                yq-go = pkgs.yq-go ;
+                                            } ;
                                     test-home =
                                         name :
                                             {
@@ -2054,38 +2054,38 @@
                                                     in { name = "test-resource:  ${ name }" ; value = resource-factory.check test ; } ;
                                             tests =
                                                 [
-                                                    # { name = "t0" ; value = failure_.check { compile-time-arguments = "469c07cdbb13c65f1435bb0b9b7eb5ed2c14d70bc111d12fda44c2cd47c23e99aed06672fec7e138bfa11de61184774d7b2dd2d33aa5958d9df49a4c55e6a8e3" ; run-time-arguments = [ "ba02df6c2bf44bb25e7a23fe02dac230baaabda128f463ce26af83e7787bc16de9260f56beaacdef75743665eededeaae997f50892983be4f40453ef6e817f4f" ] ; } ; }
-                                                    # { name = "t1" ; value = log-event-listener.check { log-file = [ "409d85c81f91fa72bcb589647e59aa81b9b48a36e7e65e8d562cf86120955fe07d35dd7733f6349bc8c8bb4ed634630a03e5da0150de9ea81ef79c46a64a2456" ] ; message = "7ec5c1abf8934880c738af14ed3213437edb7e8a3b1833b31a9b253934606a0604cb80ca36f25d0f41e7f134eb9b7e6dc5473a69204b6f7c14aa2bf78d4ad840" ; mkDerivation = pkgs.stdenv.mkDerivation ; } ; }
-                                                    # ( test-home "simple test" )
-                                                    # (
-                                                    #     test-resource
-                                                    #         "Happy Case"
-                                                    #         false
-                                                    #         false
-                                                    #         false
-                                                    #         false
-                                                    #         {
-                                                    #             arguments = [ "ceb405a144a10b8efca63d9d950ce2b92bb2997ab44a9588ca740b3540a9a532a6b959a0d990dd469a63b16eb7600991bb7a1ef2b79d697b43e17134cbccec6c" "cdca67397f32d23a379284468e099b96c5b53d62659faf4d48dfc650bea444d6bc450b7eefee9b273c12672b9008fa6a077b15efb676b35f9912de977f54724d" ] ;
-                                                    #             expected-dependencies = [ ] ;
-                                                    #             expected-index = "0000000311691948" ;
-                                                    #             expected-originator-pid = 45 ;
-                                                    #             expected-provenance = "new" ;
-                                                    #             expected-standard-error = "" ;
-                                                    #             expected-standard-output = "f83f1836809a4c2148e7c4d4b3dc543d2d368085d786a49366fd8b36cd730d93502da258b69d1694f2a437efa86666cf44a72e2c574a4520440621e8dc2a9fc8" ;
-                                                    #             expected-status = 0 ;
-                                                    #             expected-targets = [ "e070e8bd478692185ce2719cc2710a19cb7a8155f15f8df7cc3f7dfa0545c2e0054ed82f9ca817198fea290d4438a7445a739e7d280bcf1b55693d8629768ba4" ] ;
-                                                    #             expected-transient = -1 ;
-                                                    #             resources-directory-fixture =
-                                                    #                resources-directory :
-                                                    #                     ''
-                                                    #                         mkdir --parents ${ resources-directory }/sequential
-                                                    #                         echo 311691948 > ${ resources-directory }/sequential/sequential.counter
-                                                    #                     '' ;
-                                                    #             standard-input = "5433bd8482be1f2e1c1db4fa9268ed6e7bb02285083decb86a6166eea2df77f7e2d7524541549a3ee73d03ae955d8ec0714a959944962e8fe18f343fe108ff9f" ;
-                                                    #             standard-output = "/build/resources/mounts/0000000311691948" ;
-                                                    #             status = 0 ;
-                                                    #        }
-                                                    # )
+                                                    { name = "t0" ; value = failure_.check { compile-time-arguments = "469c07cdbb13c65f1435bb0b9b7eb5ed2c14d70bc111d12fda44c2cd47c23e99aed06672fec7e138bfa11de61184774d7b2dd2d33aa5958d9df49a4c55e6a8e3" ; run-time-arguments = [ "ba02df6c2bf44bb25e7a23fe02dac230baaabda128f463ce26af83e7787bc16de9260f56beaacdef75743665eededeaae997f50892983be4f40453ef6e817f4f" ] ; } ; }
+                                                    { name = "t1" ; value = log-event-listener.check { log-file = [ "409d85c81f91fa72bcb589647e59aa81b9b48a36e7e65e8d562cf86120955fe07d35dd7733f6349bc8c8bb4ed634630a03e5da0150de9ea81ef79c46a64a2456" ] ; message = "7ec5c1abf8934880c738af14ed3213437edb7e8a3b1833b31a9b253934606a0604cb80ca36f25d0f41e7f134eb9b7e6dc5473a69204b6f7c14aa2bf78d4ad840" ; mkDerivation = pkgs.stdenv.mkDerivation ; } ; }
+                                                    ( test-home "simple test" )
+                                                    (
+                                                        test-resource
+                                                            "Happy Case"
+                                                            false
+                                                            false
+                                                            false
+                                                            false
+                                                            {
+                                                                arguments = [ "ceb405a144a10b8efca63d9d950ce2b92bb2997ab44a9588ca740b3540a9a532a6b959a0d990dd469a63b16eb7600991bb7a1ef2b79d697b43e17134cbccec6c" "cdca67397f32d23a379284468e099b96c5b53d62659faf4d48dfc650bea444d6bc450b7eefee9b273c12672b9008fa6a077b15efb676b35f9912de977f54724d" ] ;
+                                                                expected-dependencies = [ ] ;
+                                                                expected-index = "0000000311691948" ;
+                                                                expected-originator-pid = 45 ;
+                                                                expected-provenance = "new" ;
+                                                                expected-standard-error = "" ;
+                                                                expected-standard-output = "f83f1836809a4c2148e7c4d4b3dc543d2d368085d786a49366fd8b36cd730d93502da258b69d1694f2a437efa86666cf44a72e2c574a4520440621e8dc2a9fc8" ;
+                                                                expected-status = 0 ;
+                                                                expected-targets = [ "e070e8bd478692185ce2719cc2710a19cb7a8155f15f8df7cc3f7dfa0545c2e0054ed82f9ca817198fea290d4438a7445a739e7d280bcf1b55693d8629768ba4" ] ;
+                                                                expected-transient = -1 ;
+                                                                resources-directory-fixture =
+                                                                   resources-directory :
+                                                                        ''
+                                                                            mkdir --parents ${ resources-directory }/sequential
+                                                                            echo 311691948 > ${ resources-directory }/sequential/sequential.counter
+                                                                        '' ;
+                                                                standard-input = "5433bd8482be1f2e1c1db4fa9268ed6e7bb02285083decb86a6166eea2df77f7e2d7524541549a3ee73d03ae955d8ec0714a959944962e8fe18f343fe108ff9f" ;
+                                                                standard-output = "/build/resources/mounts/0000000311691948" ;
+                                                                status = 0 ;
+                                                           }
+                                                    )
                                                 ] ;
                                             in builtins.listToAttrs tests ;
                                     modules =
