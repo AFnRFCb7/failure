@@ -920,7 +920,7 @@
                                                                                     ignore :
                                                                                         {
                                                                                             init =
-                                                                                                failure : resources : self :
+                                                                                                resources : self :
                                                                                                     let
                                                                                                         application =
                                                                                                             pkgs.writeShellApplication
@@ -957,7 +957,7 @@
                                                                                     ignore :
                                                                                         {
                                                                                             init =
-                                                                                                failure : resources : self :
+                                                                                                resources : self :
                                                                                                     let
                                                                                                         application =
                                                                                                             pkgs.writeShellApplication
