@@ -55,7 +55,7 @@
                                                     type = builtins.typeOf expression.parameter ;
                                                     in
                                                         if type == "string" then expression.parameter
-                                                        else if type == "set" then builtins.concatStringsSep " , " [ "{ " ( builtins.attrValues ( builtins.mapAttrs ( name : value : "${ name }${ if length values > 0 then " " else " ? ${ builtins.elemAt values 0 }" }" ) ) ) " }" ]
+                                                        else if type == "set" then builtins.concatStringsSep " , " [ "{ " ( builtins.attrValues ( builtins.mapAttrs ( name : value : "${ name }${ if builtins.length values > 0 then " " else " ? ${ builtins.elemAt values 0 }" }" ) ) ) " }" ]
                                                         else builtins.throw "lambda parameter expressions must either be a string or a set" ;
                                             in "${ parameter } : ${ body }"
                                     else if expression.type == "list" then
