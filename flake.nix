@@ -1308,8 +1308,9 @@
                                                                                     visitor = visitor ;
                                                                                     writeShellApplication = pkgs.writeShellApplication ;
                                                                                     yq-go = pkgs.yq-go ;
-                                                                                } );
+                                                                                } ) ;
                                                                         point =
+                                                                            builtins.trace "🔍 entering resources_ point" (
                                                                             let
                                                                                 identity =
                                                                                     {
@@ -1327,7 +1328,7 @@
                                                                                             targets = targets ;
                                                                                             transient = transient ;
                                                                                         } ;
-                                                                                in identity ( value null ) ;
+                                                                                in identity ( value null ) ) ;
                                                                         in resource-factory.implementation ;
                                                         }
                                                         tree ) ;
