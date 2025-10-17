@@ -1354,6 +1354,7 @@
                                                        else builtins.throw "We can not handle ${ value }." ;
                                                 in builtins.trace "🔍 entering secrets" ( builtins.mapAttrs ( mapper [ ( builtins.toString secrets ) ] ) ( builtins.readDir ( builtins.toString secrets ) ) ) ;
                                         in
+                                            builtins.trace "🔍 exiting user" (
                                             {
                                                 config =
                                                     {
@@ -1806,7 +1807,7 @@
                                                                         } ;
                                                             } ;
                                                     } ;
-                                            } ) ;
+                                            } ) ) ;
                             in
                                 {
                                     checks =
