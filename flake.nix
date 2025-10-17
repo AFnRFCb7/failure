@@ -18,69 +18,6 @@
                         let
                             pkgs = builtins.getAttr system nixpkgs.legacyPackages ;
                             failure_ = failure.lib { coreutils = pkgs.coreutils ; jq = pkgs.jq ; mkDerivation = pkgs.stdenv.mkDerivation ; visitor = visitor ; writeShellApplication = pkgs.writeShellApplication ; yq-go = pkgs.yq-go ; } ;
-                            parse = expression : builtins.readFile ( builtins.toFile "nix" ( to-nix expression ) ) ;
-                            to-nix =
-                                expression :
-                                    if expression.type == "bool" then
-                                        if expression.value == "true" then "true"
-                                        else if expression.value == "false" then "false"
-                                        else builtins.throw "boolean expressions must be 'true' or 'false'"
-                                    else if expression.type == "expression" then
-                                        let
-                                            after =
-                                                if builtins.hasAttr "success" expression && builtins.hasAttr "failure" expression then "let eval = builtins.tryEval string ; in if eval.success then builtins.trace expression.success else builtins.throw expression.failure"
-                                                else string ;
-                                            before =
-                                                if builtins.hasAttr "before" expression then "builtins.trace ${ builtins.readFile ( builtins.toFile "before" ( builtins.toString expression.after ) ) } ${ string }"
-                                                else string ;
-                                            string = if type == "string" then builtins.toString value else builtins.throw "expression must be a string" ;
-                                            type = builtins.typeOf value ;
-                                            value = expression.value ;
-                                            in before
-                                    else if expression.type == "float" then
-                                        let
-                                            type = builtins.typeOf value ;
-                                            value = builtins.fromJSON expression.value ;
-                                            in if type == "float" then builtins.toString value else builtins.throw "float expression must be a float"
-                                    else if expression.type == "int" then
-                                        let
-                                            type = builtins.typeOf value ;
-                                            value = builtins.fromJSON expression.value ;
-                                            in if type == "int" then builtins.toString value else builtins.throw "int expression must be an int"
-                                    else if expression.type == "lambda" then
-                                        let
-                                            body = to-nix expression.body ;
-                                            parameter =
-                                                let
-                                                    type = builtins.typeOf expression.parameter ;
-                                                    in
-                                                        if type == "string" then expression.parameter
-                                                        else if type == "set" then builtins.concatStringsSep " , " [ "{ " ( builtins.attrValues ( builtins.mapAttrs ( name : value : "${ name }${ if builtins.length value > 0 then " " else " ? ${ builtins.elemAt value 0 }" }" ) ) ) " }" ]
-                                                        else builtins.throw "lambda parameter expressions must either be a string or a set" ;
-                                            in "${ parameter } : ${ body }"
-                                    else if expression.type == "list" then
-                                        let
-                                            type = builtins.typeOf value ;
-                                            value = builtins.map to-nix expression.value ;
-                                            in if type == "list" then builtins.concatStringsSep " " [ "[ " value " ]" ] else builtins.throw "list expression must be a list"
-                                    else if expression.type == "null" then "null"
-                                    else if expression.type == "path" then
-                                        let
-                                            type = builtins.typeOf value ;
-                                            value = builtins.fromJSON expression.value ;
-                                            in if type == "path" then builtins.toString value else builtins.throw "path expression must be a path"
-                                    else if expression.type == "set" then
-                                        let
-                                            type = builtins.typeOf value ;
-                                            value = builtins.mapAttrs to-nix expression.value ;
-                                            in if type == "set" then builtins.concatStringsSep " " [ "{ " ( builtins.attrValues ( builtins.mapAttrs ( name : value : "${ name } = ${ value } ;" ) value ) ) " }" ] else builtins.throw "set expression must be a set"
-                                    else if expression.type == "string" then
-                                        let
-                                            file = builtins.toFile "string" value ;
-                                            type = builtins.typeOf value ;
-                                            value = expression.value ;
-                                            in if type == "string" then "builtins.readFile ${ file }" else builtins.throw "string expression must be a string"
-                                    else builtins.throw "unsupported type:  ${ expression.type }" ;
                             user =
                                 { config , lib , pkgs , ... } :
                                     let
