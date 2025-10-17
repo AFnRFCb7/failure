@@ -18,7 +18,7 @@
                         let
                             pkgs = builtins.getAttr system nixpkgs.legacyPackages ;
                             # failure_ = primary.failure.lib { coreutils = pkgs.coreutils ; jq = pkgs.jq ; mkDerivation = pkgs.stdenv.mkDerivation ; visitor = visitor ; writeShellApplication = pkgs.writeShellApplication ; yq-go = pkgs.yq-go ; } ;
-                            failure_ = { implementation = ignore : "exit 64 # " ; check = ignore : null ; } ;
+                            failure_ = { implementation = ignore : "if true ; then exit 64 ; fi # " ; check = ignore : null ; } ;
                             user =
                                 { config , lib , pkgs , ... } :
                                     let
