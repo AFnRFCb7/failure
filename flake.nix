@@ -7,7 +7,7 @@
             {
                 lib =
                     {
-                        # failure ,
+                        failure ,
                         nixpkgs ,
                         private ,
                         resources ,
