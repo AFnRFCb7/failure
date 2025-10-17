@@ -38,7 +38,7 @@
                                                             '' ;
                                                     } ;
                                         password-less-core =
-                                            builtins.trace "🔍 entering passwordless-core" ( derivation : target :
+                                            derivation : target :
                                                 pkgs.writeShellApplication
                                                     {
                                                         name = target ;
@@ -52,7 +52,7 @@
                                                                     ${ target } "$@"
                                                                 fi
                                                             '' ;
-                                                    } ) ;
+                                                    } ;
                                         resources_ =
                                             let
                                                 seed =
@@ -1279,7 +1279,6 @@
                                                                     } ;
                                                             } ;
                                                 in
-                                                    builtins.trace "🔍 entering resources_ in" (
                                                     visitor.lib.implementation
                                                         {
                                                             lambda =
@@ -1330,7 +1329,7 @@
                                                                                 in identity ( value null ) ) ;
                                                                         in resource-factory.implementation ;
                                                         }
-                                                        tree ) ;
+                                                        tree ;
                                         secrets_ =
                                             let
                                                 mapper =
