@@ -1109,7 +1109,7 @@
                                                                                                                         EOF
                                                                                                                         git fetch origin "$BRANCH" 2>&1
                                                                                                                         git checkout "$COMMIT" 2>&1
-                                                                                                                        GIT_DIR="$FAILURE/git" GIT_WORK_TREE="$PERSONAL/work-tree" git snapshot failure "$REPOSITORY_ROOT"
+                                                                                                                        GIT_DIR="$FAILURE/git" GIT_WORK_TREE="$FAILURE/work-tree" git snapshot failure "$REPOSITORY_ROOT"
                                                                                                                         GIT_DIR="$PERSONAL/git" GIT_WORK_TREE="$PERSONAL/work-tree" git snapshot personal "$REPOSITORY_ROOT"
                                                                                                                         GIT_DIR="$RESOURCES/git" GIT_WORK_TREE="$RESOURCES/work-tree" git snapshot resources "$REPOSITORY_ROOT"
                                                                                                                         GIT_DIR="$SECRETS/git" GIT_WORK_TREE="$SECRETS/work-tree" git snapshot secrets "$REPOSITORY_ROOT"
