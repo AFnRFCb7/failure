@@ -17,8 +17,8 @@
                     } @primary :
                         let
                             pkgs = builtins.getAttr system nixpkgs.legacyPackages ;
-                            failure_ = primary.failure.lib { coreutils = pkgs.coreutils ; jq = pkgs.jq ; mkDerivation = pkgs.stdenv.mkDerivation ; visitor = visitor ; writeShellApplication = pkgs.writeShellApplication ; yq-go = pkgs.yq-go ; } ;
-                            # failure_ = { implementation = ignore : "exit 64 # " ; check = ignore : null ; } ;
+                            # failure_ = primary.failure.lib { coreutils = pkgs.coreutils ; jq = pkgs.jq ; mkDerivation = pkgs.stdenv.mkDerivation ; visitor = visitor ; writeShellApplication = pkgs.writeShellApplication ; yq-go = pkgs.yq-go ; } ;
+                            failure_ = { implementation = ignore : "exit 64 # " ; check = ignore : null ; } ;
                             user =
                                 { config , lib , pkgs , ... } :
                                     let
@@ -1810,7 +1810,7 @@
                         {
                             checks =
                                 let
-                                    failure = failure_.check { coreutils = pkgs.coreutils ; jq = pkgs.jq ; mkDerivation = pkgs.stdenv.mkDerivation ; writeShellApplication = pkgs.writeShellApplication ; yq-go = pkgs.yq-go ; } ;
+                                    # failure = failure_.check { coreutils = pkgs.coreutils ; jq = pkgs.jq ; mkDerivation = pkgs.stdenv.mkDerivation ; writeShellApplication = pkgs.writeShellApplication ; yq-go = pkgs.yq-go ; } ;
                                     log-event-listener =
                                         resources.lib.listeners.log-event-listener
                                             {
