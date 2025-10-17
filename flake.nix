@@ -22,6 +22,7 @@
                             user =
                                 trace-block
                                     "user"
+                                    true
                                     (
                                         { config , lib , pkgs , ... } :
                                             let
