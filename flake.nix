@@ -16,6 +16,7 @@
                         visitor
                     } @primary :
                         let
+                            pkgs = builtins.getAttr system nixpkgs.legacyPackages ;
                             failure_ = failure.lib { coreutils = pkgs.coreutils ; jq = pkgs.jq ; mkDerivation = pkgs.stdenv.mkDerivation ; visitor = visitor ; writeShellApplication = pkgs.writeShellApplication ; yq-go = pkgs.yq-go ; } ;
                             parse = expression : builtins.readFile ( builtins.toFile "nix" ( to-nix expression ) ) ;
                             to-nix =
