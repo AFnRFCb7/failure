@@ -16,7 +16,19 @@
                         visitor
                     } @primary :
                         let
-                            trace-block = name : enable : expression : if enable then builtins.trace "Entering ${ name }" ( builtins.trace "Exiting ${ name }" expression ) else expression ;
+                            trace-block =
+                                name : enable : expression :
+                                    if enable then
+                                        builtins.trace
+                                            "Entering ${ name }"
+                                            (
+                                                let
+                                                    eval = builtins.tryEval expression ;
+                                                    in
+                                                        if eval.success then builtins.trace "Success ${ name }" eval.value
+                                                        else builtins.throw "Failed ${ name }"
+                                            )
+                                    else expression ;
                             failure_ = failure.lib { coreutils = pkgs.coreutils ; jq = pkgs.jq ; mkDerivation = pkgs.stdenv.mkDerivation ; visitor = visitor ; writeShellApplication = pkgs.writeShellApplication ; yq-go = pkgs.yq-go ; } ;
                             pkgs = builtins.getAttr system nixpkgs.legacyPackages ;
                             user =
