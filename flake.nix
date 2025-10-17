@@ -22,7 +22,7 @@
                                 { config , lib , pkgs , ... } :
                                     let
                                         password-less-wrap =
-                                            builtins.trace "🔍 entering password-less-wrap" ( derivation : target :
+                                            derivation : target :
                                                 pkgs.writeShellApplication
                                                     {
                                                         name = target ;
@@ -36,7 +36,7 @@
                                                                     sudo ${ target } "$@"
                                                                 fi
                                                             '' ;
-                                                    } ) ;
+                                                    } ;
                                         password-less-core =
                                             builtins.trace "🔍 entering passwordless-core" ( derivation : target :
                                                 pkgs.writeShellApplication
