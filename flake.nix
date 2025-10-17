@@ -9,9 +9,9 @@
                     {
                         failure ,
                         nixpkgs ,
+                        private ,
                         resources ,
                         secrets ,
-                        private ,
                         system ,
                         visitor
                     } @primary :
