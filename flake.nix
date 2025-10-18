@@ -27,7 +27,7 @@
                                                         visitor.lib.implementation
                                                             (
                                                                 let
-                                                                    string = path : value : { path = path ; type = builtins.typeOf value ; value = builtins.toJSON path ; } ;
+                                                                    string = path : value : { path = path ; type = builtins.typeOf value ; value = value ; } ;
                                                                     in
                                                                         {
                                                                             bool = string ;
@@ -46,7 +46,7 @@
                                                         ''
                                                             RUNTIME_ARGUMENTS_JSON="$( printf '%s\n' "$@" | jq -R . | jq -s . )" || exit 64
                                                             export RUNTIME_ARGUMENTS_JSON
-                                                            yq --null-input --prettyPrint '{ "compile-time-arguments" : ${ compile-time-arguments_ } }' >&2
+                                                            yq --null-input --prettyPrint '{ "compile-time-arguments" : ${ builtins.toJSON compile-time-arguments_ } }' >&2
                                                             exit 64
                                                         '' ;
                                         } ;
