@@ -11,6 +11,7 @@
                         jq ,
                         mkDerivation ,
                         writeShellApplication ,
+                        visitor ,
                         yq-go
                     } :
                         let
@@ -21,12 +22,33 @@
                                             name = "failure" ;
                                             runtimeInputs = [ coreutils jq yq-go ] ;
                                             text =
-                                                ''
-                                                    RUNTIME_ARGUMENTS_JSON="$( printf '%s\n' "$@" | jq -R . | jq -s . )" || exit 64
-                                                    export RUNTIME_ARGUMENTS_JSON
-                                                    yq --null-input --prettyPrint '{ "compile-time-arguments" : ${ builtins.toJSON compile-time-arguments } }' >&2
-                                                    exit 64
-                                                '' ;
+                                                let
+                                                    compile-time-arguments_ =
+                                                        visitor.lib.implementation
+                                                            (
+                                                                let
+                                                                    string = path : value : { path = path ; type = builtins.typeOf value ; value = builtins.toJSON path ; } ;
+                                                                    in
+                                                                        {
+                                                                            bool = string ;
+                                                                            float = string ;
+                                                                            int = string ;
+                                                                            lambda = path : value : { path = path ; type = builtins.typeOf value ; value = null ; } ;
+                                                                            list = string ;
+                                                                            null = string ;
+                                                                            path = string ;
+                                                                            set = string ;
+                                                                            string = string ;
+                                                                        }
+                                                            )
+                                                        compile-time-arguments ;
+                                                    in
+                                                        ''
+                                                            RUNTIME_ARGUMENTS_JSON="$( printf '%s\n' "$@" | jq -R . | jq -s . )" || exit 64
+                                                            export RUNTIME_ARGUMENTS_JSON
+                                                            yq --null-input --prettyPrint '{ "compile-time-arguments" : ${ compile-time-arguments_ } }' >&2
+                                                            exit 64
+                                                        '' ;
                                         } ;
                             in
                                 {
