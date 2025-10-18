@@ -31,7 +31,7 @@
                                         } ;
                                     stringed =
                                         object :
-                                            builtions.toJSON
+                                            builtins.toJSON
                                                 (
                                                     visitor.lib.implementation
                                                         (
