@@ -8,6 +8,7 @@
                 lib =
                     {
                         coreutils ,
+                        error ? 64 ,
                         jq ,
                         mkDerivation ,
                         writeShellApplication ,
