@@ -8,7 +8,8 @@
                 lib =
                     {
                         coreutils ,
-                        error ? 64 ,
+                        error-planned ? 64 ,
+                        error-unplanned ? 65 ,
                         jq ,
                         mkDerivation ,
                         writeShellApplication ,
@@ -24,10 +25,10 @@
                                             runtimeInputs = [ coreutils jq yq-go ] ;
                                             text =
                                                 ''
-                                                    RUNTIME_ARGUMENTS_JSON="$( printf '%s\n' "$@" | jq -R . | jq -s . )" || exit 64
+                                                    RUNTIME_ARGUMENTS_JSON="$( printf '%s\n' "$@" | jq -R . | jq -s . )" || exit ${ builtins.toString error-unplanned }
                                                     export RUNTIME_ARGUMENTS_JSON
                                                     yq --null-input --prettyPrint '{ "compile-time-arguments" : ${ stringed compile-time-arguments } }' >&2
-                                                    exit 64
+                                                    exit ${ builtins.toString error-planned }
                                                 '' ;
                                         } ;
                                     stringed =
