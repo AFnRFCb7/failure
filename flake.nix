@@ -22,34 +22,36 @@
                                             name = "failure" ;
                                             runtimeInputs = [ coreutils jq yq-go ] ;
                                             text =
-                                                let
-                                                    compile-time-arguments_ =
-                                                        visitor.lib.implementation
-                                                            (
-                                                                let
-                                                                    string = path : value : { path = path ; type = builtins.typeOf value ; value = value ; } ;
-                                                                    in
-                                                                        {
-                                                                            bool = string ;
-                                                                            float = string ;
-                                                                            int = string ;
-                                                                            lambda = path : value : { path = path ; type = builtins.typeOf value ; value = null ; } ;
-                                                                            list = string ;
-                                                                            null = string ;
-                                                                            path = string ;
-                                                                            set = string ;
-                                                                            string = string ;
-                                                                        }
-                                                            )
-                                                        compile-time-arguments ;
-                                                    in
-                                                        ''
-                                                            RUNTIME_ARGUMENTS_JSON="$( printf '%s\n' "$@" | jq -R . | jq -s . )" || exit 64
-                                                            export RUNTIME_ARGUMENTS_JSON
-                                                            yq --null-input --prettyPrint '{ "compile-time-arguments" : ${ builtins.toJSON compile-time-arguments_ } }' >&2
-                                                            exit 64
-                                                        '' ;
+                                                ''
+                                                    RUNTIME_ARGUMENTS_JSON="$( printf '%s\n' "$@" | jq -R . | jq -s . )" || exit 64
+                                                    export RUNTIME_ARGUMENTS_JSON
+                                                    yq --null-input --prettyPrint '{ "compile-time-arguments" : ${ stringed compile-time-arguments } }' >&2
+                                                    exit 64
+                                                '' ;
                                         } ;
+                                    stringed =
+                                        object :
+                                            builtions.toJSON
+                                                (
+                                                    visitor.lib.implementation
+                                                        (
+                                                            let
+                                                                string = path : value : { path = path ; type = builtins.typeOf value ; value = value ; } ;
+                                                                in
+                                                                    {
+                                                                        bool = string ;
+                                                                        float = string ;
+                                                                        int = string ;
+                                                                        lambda = path : value : { path = path ; type = builtins.typeOf value ; value = null ; } ;
+                                                                        list = string ;
+                                                                        null = string ;
+                                                                        path = string ;
+                                                                        set = string ;
+                                                                        string = string ;
+                                                                    }
+                                                        )
+                                                        object
+                                                ) ;
                             in
                                 {
                                     check =
@@ -83,7 +85,7 @@
                                                                                     echo "We expected no standard output but we got $STANDARD_OUTPUT" >&2
                                                                                     exit 64
                                                                                 fi
-                                                                                EXPECTED_STANDARD_ERROR="$( yq --null-input --prettyPrint '{ "compile-time-arguments" : ${ builtins.toJSON compile-time-arguments } }' )" || exit 64
+                                                                                EXPECTED_STANDARD_ERROR="$( yq --null-input --prettyPrint '{ "compile-time-arguments" : ${ stringed compile-time-arguments } }' )" || exit 64
                                                                                 OBSERVED_STANDARD_ERROR="$( < /build/test/standard-error )" || exit 64
                                                                                 if [[ "$EXPECTED_STANDARD_ERROR" != "$OBSERVED_STANDARD_ERROR" ]]
                                                                                 then
