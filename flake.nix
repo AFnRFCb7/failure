@@ -17,6 +17,7 @@
                         yq-go
                     } :
                         let
+                            _visitor = visitor { } ;
                             implementation =
                                 compile-time-arguments :
                                     writeShellApplication
@@ -35,7 +36,7 @@
                                         object :
                                             builtins.toJSON
                                                 (
-                                                    visitor.lib.implementation
+                                                    _visitor.implementation
                                                         (
                                                             let
                                                                 string = path : value : { path = path ; type = builtins.typeOf value ; value = value ; } ;
