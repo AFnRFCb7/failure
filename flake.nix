@@ -17,7 +17,7 @@
                         yq-go
                     } :
                         let
-                            _visitor = visitor { } ;
+                            _visitor = visitor.lib { } ;
                             implementation =
                                 compile-time-arguments :
                                     writeShellApplication
