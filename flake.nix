@@ -17,7 +17,7 @@
                         yq-go
                     } :
                         let
-                            _visitor = visitor.lib { default = path : value : let type = builtins.typeOf value ; in { path = path ; type = type ; value = if type == "lambda" then null else value ; } ; } ;
+                            _visitor = visitor.lib { default = path : value : let type = builtins.typeOf value ; in { path = path ; type = type ; value = if type == "lambda" then null else value ; } ; } { } ;
                             implementation =
                                 compile-time-arguments :
                                     writeShellApplication
