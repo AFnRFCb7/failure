@@ -37,7 +37,7 @@
                                     check =
                                         {
                                             compile-time-arguments ,
-                                            expectation ,
+                                            expected-standard-error ,
                                             run-time-arguments ,
                                         } :
                                             mkDerivation
@@ -66,7 +66,7 @@
                                                                                     echo "We expected no standard output but we got $STANDARD_OUTPUT" >&2
                                                                                     exit 64
                                                                                 fi
-                                                                                EXPECTED_STANDARD_ERROR="${ expectation }"
+                                                                                EXPECTED_STANDARD_ERROR="${ expectated-standard-error }"
                                                                                 OBSERVED_STANDARD_ERROR="$( < /build/test/standard-error )" || exit 64
                                                                                 if [[ "$EXPECTED_STANDARD_ERROR" != "$OBSERVED_STANDARD_ERROR" ]]
                                                                                 then
