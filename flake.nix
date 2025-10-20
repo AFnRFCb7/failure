@@ -17,7 +17,7 @@
                         yq-go
                     } :
                         let
-                            _visitor = visitor.lib { } ;
+                            _visitor = visitor.lib { default = path : value : let type = builtins.typeOf value ; in { path = path ; type = type ; value = if type == "lambda" then null else value ; } ; } ;
                             implementation =
                                 compile-time-arguments :
                                     writeShellApplication
@@ -28,38 +28,16 @@
                                                 ''
                                                     RUNTIME_ARGUMENTS_JSON="$( printf '%s\n' "$@" | jq -R . | jq -s . )" || exit ${ builtins.toString error-unplanned }
                                                     export RUNTIME_ARGUMENTS_JSON
-                                                    yq --null-input --prettyPrint '{ "compile-time-arguments" : ${ stringed compile-time-arguments } }' >&2
+                                                    yq --null-input --prettyPrint '{ "compile-time-arguments" : ${ _visitor compile-time-arguments } }' >&2
                                                     exit ${ builtins.toString error-planned }
                                                 '' ;
                                         } ;
-                                    stringed =
-                                        object :
-                                            builtins.toJSON
-                                                (
-                                                    _visitor.implementation
-                                                        (
-                                                            let
-                                                                string = path : value : { path = path ; type = builtins.typeOf value ; value = value ; } ;
-                                                                in
-                                                                    {
-                                                                        bool = string ;
-                                                                        float = string ;
-                                                                        int = string ;
-                                                                        lambda = path : value : { path = path ; type = builtins.typeOf value ; value = null ; } ;
-                                                                        list = string ;
-                                                                        null = string ;
-                                                                        path = string ;
-                                                                        set = string ;
-                                                                        string = string ;
-                                                                    }
-                                                        )
-                                                        object
-                                                ) ;
                             in
                                 {
                                     check =
                                         {
                                             compile-time-arguments ,
+                                            expectation ,
                                             run-time-arguments ,
                                         } :
                                             mkDerivation
