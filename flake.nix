@@ -17,7 +17,7 @@
                         yq-go
                     } :
                         let
-                            _visitor = visitor.lib { default = path : value : let type = builtins.typeOf value ; in { FLAG = null ; path = path ; type = type ; value = if type == "lambda" then null else value ; } ; } ;
+                            _visitor = visitor.lib { default = path : value : let type = builtins.typeOf value ; in { path = path ; type = type ; value = if type == "lambda" then null else value ; } ; } ;
                             implementation =
                                 compile-time-arguments :
                                     writeShellApplication
@@ -67,7 +67,7 @@
                                                                                     echo "We expected no standard output but we got $STANDARD_OUTPUT" >&2
                                                                                     exit 64
                                                                                 fi
-                                                                                EXPECTED_STANDARD_ERROR="${ expected-standard-error }"
+                                                                                EXPECTED_STANDARD_ERROR="$( echo '${ builtins.toJSON expected-standard-error }' | yq --prettyPrint "." )" || exit 64
                                                                                 OBSERVED_STANDARD_ERROR="$( < /build/test/standard-error )" || exit 64
                                                                                 if [[ "$EXPECTED_STANDARD_ERROR" != "$OBSERVED_STANDARD_ERROR" ]]
                                                                                 then
