@@ -29,7 +29,7 @@
                                                     RUN_TIME_ARGUMENTS_JSON="$( printf '%s\n' "$@" | jq -R . | jq -s . )" || exit ${ builtins.toString error-unplanned }
                                                     # shellcheck disable=SC2016
                                                     yq \
-                                                        --null-input \
+                                                        -n \
                                                         --argjson COMPILE_TIME_ARGUMENTS '${ builtins.toJSON ( _visitor.implementation { } compile-time-arguments ) }' \
                                                         --argjson RUN_TIME_ARGUMENTS "$RUN_TIME_ARGUMENTS_JSON" \
                                                         --prettyPrint \
