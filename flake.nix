@@ -29,6 +29,7 @@
                                                     COMPILE_TIME_ARGUMENTS_JSON='${ builtins.toJSON ( _visitor.implementation { } compile-time-arguments ) }'
                                                     RUN_TIME_ARGUMENTS_JSON="$( printf '%s\n' "$@" | jq -R . | jq -s . )" || exit ${ builtins.toString error-unplanned }
                                                     yq --version >&2
+                                                    # shellcheck disable=SC2016
                                                     yq \
                                                         -n \
                                                         --argjson COMPILE_TIME_ARGUMENTS "$COMPILE_TIME_ARGUMENTS_JSON" \
