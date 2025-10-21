@@ -32,7 +32,7 @@
                                                         STANDARD_INPUT="$( cat )" || exit ${ builtins.toString error-unplanned }
                                                     else
                                                         HAS_STANDARD_INPUT=false
-                                                        STANDARD_INPUT=""
+                                                        STANDARD_INPUT="empty"
                                                     fi
                                                     export HAS_STANDARD_INPUT
                                                     export STANDARD_INPUT
