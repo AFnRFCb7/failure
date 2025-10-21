@@ -80,18 +80,19 @@
                                                                                 STANDARD_OUTPUT="$( < /build/test/standard-output )" || ${ _failure.implementation "c53a0b7e" }/bin/failure
                                                                                 if [[ -n "$STANDARD_OUTPUT" ]]
                                                                                 then
-                                                                                    ${ _failure.implementation "We expected no standard output but we got $STANDARD_OUTPUT" }/bin/failure
+                                                                                    echo "We expected no standard output but we got $STANDARD_OUTPUT" >&2
+                                                                                    exit ${ builtins.toString error-planned }
                                                                                 fi
                                                                                 if ! diff --unified ${ builtins.toFile "standard-error"  expected-standard-error } /build/test/standard-error
                                                                                 then
                                                                                     echo "We expected standard error to be ${ builtins.toFile "standard-error" expected-standard-error } but it was:" >&2
                                                                                     cat /build/test/standard-error >&2
-                                                                                    exit 64
+                                                                                    exit ${ builtins.toString error-planned }
                                                                                 fi
                                                                                 if [[ "$STATUS" != "64" ]]
                                                                                 then
                                                                                     echo "We expected the status to be 64 but we got $STATUS" >&2
-                                                                                    exit 64
+                                                                                    exit ${ builtins.toString error-planned }
                                                                                 fi
                                                                             '' ;
                                                                     } ;
