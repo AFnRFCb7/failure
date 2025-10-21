@@ -36,9 +36,10 @@
                                 {
                                     check =
                                         {
-                                            compile-time-arguments ,
+                                            compile-time-arguments ? null ,
                                             expected-standard-error ,
-                                            run-time-arguments ,
+                                            run-time-arguments ? [ ] ,
+                                            standard-input ? null
                                         } :
                                             mkDerivation
                                                 {
