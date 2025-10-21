@@ -33,10 +33,8 @@
                                                     yq \
                                                         eval \
                                                         --null-input \
-                                                        --argjson COMPILE_TIME_ARGUMENTS "$COMPILE_TIME_ARGUMENTS_JSON" \
-                                                        --argjson RUN_TIME_ARGUMENTS "$RUN_TIME_ARGUMENTS_JSON" \
                                                         --prettyPrint \
-                                                        '{ "compile-time-arguments" : $COMPILE_TIME_ARGUMENTS , "run-time-arguments" : $RUN_TIME_ARGUMENTS }' >&2
+                                                        '{ "compile-time-arguments" : env(COMPILE_TIME_ARGUMENTS) , "run-time-arguments" : env(RUN_TIME_ARGUMENTS) }' >&2
                                                     exit ${ builtins.toString error-planned }
                                                 '' ;
                                         } ;
