@@ -39,7 +39,6 @@
                                                     export COMPILE_TIME_ARGUMENTS_JSON='${ builtins.toJSON ( _visitor.implementation { } compile-time-arguments ) }'
                                                     RUN_TIME_ARGUMENTS_JSON="$( printf '%s\n' "$@" | jq -R . | jq -s . )" || exit ${ builtins.toString error-unplanned }
                                                     export RUN_TIME_ARGUMENTS_JSON
-                                                    echo "$0" >&2
                                                     yq \
                                                         eval \
                                                         --null-input \
