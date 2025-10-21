@@ -26,12 +26,12 @@
                                             runtimeInputs = [ coreutils jq yq-go ] ;
                                             text =
                                                 ''
+                                                    COMPILE_TIME_ARGUMENTS_JSON='${ builtins.toJSON ( _visitor.implementation { } compile-time-arguments ) }'
                                                     RUN_TIME_ARGUMENTS_JSON="$( printf '%s\n' "$@" | jq -R . | jq -s . )" || exit ${ builtins.toString error-unplanned }
-                                                    yq --version
-                                                    # shellcheck disable=SC2016
+                                                    yq --version >&2
                                                     yq \
                                                         -n \
-                                                        --argjson COMPILE_TIME_ARGUMENTS '${ builtins.toJSON ( _visitor.implementation { } compile-time-arguments ) }' \
+                                                        --argjson COMPILE_TIME_ARGUMENTS "$COMPILE_TIME_ARGUMENTS_JSON \
                                                         --argjson RUN_TIME_ARGUMENTS "$RUN_TIME_ARGUMENTS_JSON" \
                                                         --prettyPrint \
                                                         '{ "compile-time-arguments" : $COMPILE_TIME_ARGUMENTS , "run-time-arguments" : $RUN_TIME_ARGUMENTS }' >&2
