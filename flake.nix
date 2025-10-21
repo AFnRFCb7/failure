@@ -27,6 +27,7 @@
                                             text =
                                                 ''
                                                     RUN_TIME_ARGUMENTS_JSON="$( printf '%s\n' "$@" | jq -R . | jq -s . )" || exit ${ builtins.toString error-unplanned }
+                                                    yq --version
                                                     # shellcheck disable=SC2016
                                                     yq \
                                                         -n \
