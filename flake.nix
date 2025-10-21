@@ -26,10 +26,9 @@
                                             runtimeInputs = [ coreutils jq yq-go ] ;
                                             text =
                                                 ''
-                                                    COMPILE_TIME_ARGUMENTS_JSON='${ builtins.toJSON ( _visitor.implementation { } compile-time-arguments ) }'
+                                                    export COMPILE_TIME_ARGUMENTS_JSON='${ builtins.toJSON ( _visitor.implementation { } compile-time-arguments ) }'
                                                     RUN_TIME_ARGUMENTS_JSON="$( printf '%s\n' "$@" | jq -R . | jq -s . )" || exit ${ builtins.toString error-unplanned }
-                                                    yq --version >&2
-                                                    # shellcheck disable=SC2016
+                                                    export RUNTIME_ARGUMENTS_JSON
                                                     yq \
                                                         eval \
                                                         --null-input \
