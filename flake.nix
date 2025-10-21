@@ -37,6 +37,7 @@
                                     check =
                                         {
                                             compile-time-arguments ? null ,
+                                            diffutil ,
                                             expected-standard-error ,
                                             run-time-arguments ? [ ] ,
                                             standard-input ? null
@@ -67,11 +68,10 @@
                                                                                     echo "We expected no standard output but we got $STANDARD_OUTPUT" >&2
                                                                                     exit 64
                                                                                 fi
-                                                                                EXPECTED_STANDARD_ERROR="${ expected-standard-error }"
-                                                                                OBSERVED_STANDARD_ERROR="$( < /build/test/standard-error )" || exit 64
-                                                                                if [[ "$EXPECTED_STANDARD_ERROR" != "$OBSERVED_STANDARD_ERROR" ]]
+                                                                                if ! diff --unified ${ builtins.toFile "standard-error"  expected-standard-error } /build/test-standard-error
                                                                                 then
-                                                                                    echo "We expected standard error to be $EXPECTED_STANDARD_ERROR but it was $OBSERVED_STANDARD_ERROR" >&2
+                                                                                    echo "We expected standard error to be ${ builtins.toFile "standard-error" expected-standard-error } but it was:" >&2
+                                                                                    cat /build/test/standard-error >&2
                                                                                     exit 64
                                                                                 fi
                                                                                 if [[ "$STATUS" != "64" ]]
