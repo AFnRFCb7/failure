@@ -68,7 +68,7 @@
                                                                                     echo "We expected no standard output but we got $STANDARD_OUTPUT" >&2
                                                                                     exit 64
                                                                                 fi
-                                                                                if ! diff --unified ${ builtins.toFile "standard-error"  expected-standard-error } /build/test-standard-error
+                                                                                if ! diff --unified ${ builtins.toFile "standard-error"  expected-standard-error } /build/test/standard-error
                                                                                 then
                                                                                     echo "We expected standard error to be ${ builtins.toFile "standard-error" expected-standard-error } but it was:" >&2
                                                                                     cat /build/test/standard-error >&2
