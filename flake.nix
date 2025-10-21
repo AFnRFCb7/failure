@@ -77,7 +77,7 @@
                                                                                 else
                                                                                     STATUS="$?"
                                                                                 fi
-                                                                                STANDARD_OUTPUT="$( < /build/test/standard-output )" || ${ _failure.implementation "c53a0b7e" }/bin/failure
+                                                                                STANDARD_OUTPUT="$( < /build/test/standard-output )" || exit ${ builtins.toString error-unplanned }
                                                                                 if [[ -n "$STANDARD_OUTPUT" ]]
                                                                                 then
                                                                                     echo "We expected no standard output but we got $STANDARD_OUTPUT" >&2
