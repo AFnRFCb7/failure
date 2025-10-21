@@ -28,11 +28,11 @@
                                                 ''
                                                     if [ -t 0 ]
                                                     then
-                                                        HAS_STANDARD_INPUT=true
-                                                        STANDARD_INPUT="$( cat )" || exit ${ builtins.toString error-unplanned }
-                                                    else
                                                         HAS_STANDARD_INPUT=false
                                                         STANDARD_INPUT="empty"
+                                                    else
+                                                        HAS_STANDARD_INPUT=true
+                                                        STANDARD_INPUT="$( cat )" || exit ${ builtins.toString error-unplanned }
                                                     fi
                                                     export HAS_STANDARD_INPUT
                                                     export STANDARD_INPUT
