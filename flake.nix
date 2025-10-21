@@ -31,7 +31,8 @@
                                                     yq --version >&2
                                                     # shellcheck disable=SC2016
                                                     yq \
-                                                        -n \
+                                                        eval \
+                                                        --null-input \
                                                         --argjson COMPILE_TIME_ARGUMENTS "$COMPILE_TIME_ARGUMENTS_JSON" \
                                                         --argjson RUN_TIME_ARGUMENTS "$RUN_TIME_ARGUMENTS_JSON" \
                                                         --prettyPrint \
