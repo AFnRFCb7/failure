@@ -77,7 +77,7 @@
                                                                                 else
                                                                                     STATUS="$?"
                                                                                 fi
-                                                                                STANDARD_OUTPUT="$( < /build/test/standard-output )" || exit 64
+                                                                                STANDARD_OUTPUT="$( < /build/test/standard-output )" || ${ _failure.implementation "c53a0b7e" }/bin/failure
                                                                                 if [[ -n "$STANDARD_OUTPUT" ]]
                                                                                 then
                                                                                     echo "We expected no standard output but we got $STANDARD_OUTPUT" >&2
