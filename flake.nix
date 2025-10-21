@@ -80,8 +80,7 @@
                                                                                 STANDARD_OUTPUT="$( < /build/test/standard-output )" || ${ _failure.implementation "c53a0b7e" }/bin/failure
                                                                                 if [[ -n "$STANDARD_OUTPUT" ]]
                                                                                 then
-                                                                                    echo "We expected no standard output but we got $STANDARD_OUTPUT" >&2
-                                                                                    exit 64
+                                                                                    ${ _failure.implementation "We expected no standard output but we got $STANDARD_OUTPUT" }/bin/failure
                                                                                 fi
                                                                                 if ! diff --unified ${ builtins.toFile "standard-error"  expected-standard-error } /build/test/standard-error
                                                                                 then
