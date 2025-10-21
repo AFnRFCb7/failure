@@ -26,9 +26,13 @@
                                             runtimeInputs = [ coreutils jq yq-go ] ;
                                             text =
                                                 ''
-                                                    RUNTIME_ARGUMENTS_JSON="$( printf '%s\n' "$@" | jq -R . | jq -s . )" || exit ${ builtins.toString error-unplanned }
-                                                    export RUNTIME_ARGUMENTS_JSON
-                                                    yq --null-input --prettyPrint '{ "compile-time-arguments" : ${ builtins.toJSON ( _visitor.implementation { } compile-time-arguments ) } }' >&2
+                                                    RUN_TIME_ARGUMENTS_JSON="$( printf '%s\n' "$@" | jq -R . | jq -s . )" || exit ${ builtins.toString error-unplanned }
+                                                    yq \
+                                                        --null-input \
+                                                        --argjson COMPILE_TIME_ARGUMENTS '${ builtins.toJSON ( _visitor.implementation { } ) }' \
+                                                        --argjson RUN_TIME_ARGUMENTS "$RUN_TIME_ARGUMENTS_JSON" \
+                                                        --prettyPrint \
+                                                        '{ "compile-time-arguments" : $COMPILE_TIME_ARGUMENTS , "run-time-arguments" : $RUN_TIME_ARGUMENTS }' >&2
                                                     exit ${ builtins.toString error-planned }
                                                 '' ;
                                         } ;
