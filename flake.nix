@@ -26,16 +26,6 @@
                                             runtimeInputs = [ coreutils jq yq-go ] ;
                                             text =
                                                 ''
-                                                    if [ -t 0 ]
-                                                    then
-                                                        HAS_STANDARD_INPUT=false
-                                                        STANDARD_INPUT="empty"
-                                                    else
-                                                        HAS_STANDARD_INPUT=true
-                                                        STANDARD_INPUT="$( cat )" || exit ${ builtins.toString error-unplanned }
-                                                    fi
-                                                    export HAS_STANDARD_INPUT
-                                                    export STANDARD_INPUT
                                                     export COMPILE_TIME_ARGUMENTS_JSON='${ builtins.toJSON ( _visitor.implementation { } compile-time-arguments ) }'
                                                     RUN_TIME_ARGUMENTS_JSON="$( printf '%s\n' "$@" | jq -R . | jq -s . )" || exit ${ builtins.toString error-unplanned }
                                                     export RUN_TIME_ARGUMENTS_JSON
@@ -43,7 +33,7 @@
                                                         eval \
                                                         --null-input \
                                                         --prettyPrint \
-                                                        '{ "compile-time-arguments" : env(COMPILE_TIME_ARGUMENTS_JSON) , "has-standard-input" : env(HAS_STANDARD_INPUT) , "run-time-arguments" : env(RUN_TIME_ARGUMENTS_JSON) , "standard-input" : env(STANDARD_INPUT) }' >&2
+                                                        '{ "compile-time-arguments" : env(COMPILE_TIME_ARGUMENTS_JSON) , "has-standard-input" : "run-time-arguments" : env(RUN_TIME_ARGUMENTS_JSON) }' >&2
                                                     exit ${ builtins.toString error-planned }
                                                 '' ;
                                         } ;
@@ -54,8 +44,7 @@
                                             compile-time-arguments ? null ,
                                             diffutil ,
                                             expected-standard-error ,
-                                            run-time-arguments ? [ ] ,
-                                            standard-input ? null
+                                            run-time-arguments ? [ ]
                                         } :
                                             mkDerivation
                                                 {
