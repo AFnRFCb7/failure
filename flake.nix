@@ -33,7 +33,7 @@
                                                         eval \
                                                         --null-input \
                                                         --prettyPrint \
-                                                        '{ "compile-time-arguments" : env(COMPILE_TIME_ARGUMENTS_JSON) , "has-standard-input" : "run-time-arguments" : env(RUN_TIME_ARGUMENTS_JSON) }' >&2
+                                                        '{ "compile-time-arguments" : env(COMPILE_TIME_ARGUMENTS_JSON) , "run-time-arguments" : env(RUN_TIME_ARGUMENTS_JSON) }' >&2
                                                     exit ${ builtins.toString error-planned }
                                                 '' ;
                                         } ;
