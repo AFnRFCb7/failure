@@ -13,11 +13,10 @@
                         jq ,
                         mkDerivation ,
                         writeShellApplication ,
-                        visitor ,
-                        yq-go
+                        visitor
                     } :
                         let
-                            _visitor = visitor.lib { default = path : value : let type = builtins.typeOf value ; in { path = path ; type = type ; value = if type == "lambda" then null else value ; } ; } ;
+                            _visitor = parameters.visitor.lib { default = path : value : let type = builtins.typeOf value ; in { path = path ; type = type ; value = if type == "lambda" then null else value ; } ; } ;
                             implementation =
                                 compile-time-arguments :
                                     writeShellApplication
@@ -63,6 +62,16 @@
                                                     exit ${ builtins.toString error-planned }
                                                 '' ;
                                         } ;
+                            parameters =
+                                {
+                                    coreutils = coreutils ;
+                                    error-planned = error-planned ;
+                                    error-unplanned = error-unplanned ;
+                                    jq = jq ;
+                                    mkDerivation = mkDerivation ;
+                                    writeShellApplication = writeShellApplication ;
+                                    visitor = visitor ;
+                                } ;
                             in
                                 {
                                     check =
