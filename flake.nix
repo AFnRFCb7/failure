@@ -16,7 +16,12 @@
                         visitor
                     } :
                         let
-                            _visitor = parameters.visitor.lib { default = path : value : let type = builtins.typeOf value ; in { path = path ; type = type ; value = if type == "lambda" then null else value ; } ; } ;
+                            _visitor =
+                                parameters.visitor
+                                    {
+                                        default = path : value : let type = builtins.typeOf value ; in { path = path ; type = type ; value = if type == "lambda" then null else value ; } ;
+                                        unknown = path : value : builtins.throw "unknown" ;
+                                    } ;
                             implementation =
                                 compile-time-arguments :
                                     writeShellApplication
