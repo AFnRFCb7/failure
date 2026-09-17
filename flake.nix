@@ -92,9 +92,9 @@
                                         {
                                             compile-time-arguments ? null ,
                                             diffutils ,
-                                            expected-standard-error ,
                                             mkDerivation ,
                                             run-time-arguments ? [ ] ,
+                                            standard-error ,
                                             standard-input
                                         } :
                                             let
@@ -102,9 +102,14 @@
                                                     {
                                                         compile-time-arguments = compile-time-arguments ;
                                                         diffutils = diffutils ;
-                                                        expected-standard-error = expected-standard-error ;
                                                         mkDerivation = mkDerivation ;
                                                         run-time-arguments = run-time-arguments ;
+                                                        standard-error =
+                                                            visitor
+                                                                {
+                                                                    path = path : value : value ;
+                                                                    string = path : value : builtins.toFile "standard-error" value ;
+                                                                } standard-error ;
                                                         standard-input = standard-input ;
                                                     } ;
                                                 in
@@ -124,14 +129,14 @@
                                                                                         OUT="$1"
                                                                                         mkdir --parents "$OUT/expected"
                                                                                         ln --symbolic ${ check-parameters.standard-error } "$OUT/expected/standard-error"
-                                                                                        ln --symbolic ${ check-parameters.standard-output } "$OUT/expected/standard-output"
-                                                                                        ln --symbolic ${ check-parameters.status } "$OUT/expected/status"
+                                                                                        echo -n "" > "$OUT/expected/standard-output"
+                                                                                        echo -n ${ root-parameters.error-planned } > "$OUT/expected/status"
                                                                                         mkdir --parents "$OUT/observed"
                                                                                         if failure ${ builtins.concatStringsSep " " check-parameters.run-time-arguments } ${ if builtins.typeOf check-parameters.standard-input == "path" then "< ${ check-parameters.standard-input }" else "" } > "$OUT/observed/standard-output" 2> "$OUT/observed/standard-error"
                                                                                         then
-                                                                                            echo "$?" > "$OUT/observed/status"
+                                                                                            echo -n "$?" > "$OUT/observed/status"
                                                                                         else
-                                                                                            echo "$?" > "$OUT/observed/status"
+                                                                                            echo -n "$?" > "$OUT/observed/status"
                                                                                         fi
                                                                                         diff --unified "$OUT/expected" "$OUT/observed"
                                                                                     '' ;
