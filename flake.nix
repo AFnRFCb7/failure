@@ -117,7 +117,7 @@
                                                                     (
                                                                         writeShellApplication
                                                                             {
-                                                                                name = "test" ;
+                                                                                name = "install" ;
                                                                                 runtimeInputs = [ root-parameters.coreutils ( implementation check-parameters.compile-time-arguments ) ] ;
                                                                                 text =
                                                                                     ''
@@ -135,11 +135,9 @@
                                                                                         fi
                                                                                         diff --unified "$OUT/expected" "$OUT/observed"
                                                                                     '' ;
-                                                                            } ;
-                                                                    in
-                                                                        ''
-                                                                            ${ test }/bin/test "$out"
-                                                                        '' ;
+                                                                            }
+                                                                    )
+                                                                ] ;
                                                             name = "check" ;
                                                             src = ./. ;
                                                         } ;
