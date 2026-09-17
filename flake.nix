@@ -104,7 +104,7 @@
                                                         diffutils = diffutils ;
                                                         expected-standard-error = expected-standard-error ;
                                                         mkDerivation = mkDerivation ;
-                                                        run-time-arguments = runtime-arguments ;
+                                                        run-time-arguments = run-time-arguments ;
                                                         standard-input = standard-input ;
                                                     } ;
                                                 in
