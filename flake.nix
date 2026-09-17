@@ -95,7 +95,6 @@
                                             jq ,
                                             mkDerivation ,
                                             run-time-arguments ? [ ] ,
-                                            standard-error ,
                                             standard-input
                                         } :
                                             let
@@ -105,7 +104,6 @@
                                                         diffutils = diffutils ;
                                                         mkDerivation = mkDerivation ;
                                                         run-time-arguments = run-time-arguments ;
-                                                        standard-error = standard-error ;
                                                         standard-input = standard-input ;
                                                     } ;
                                                 in
@@ -124,7 +122,20 @@
                                                                                     ''
                                                                                         OUT="$1"
                                                                                         mkdir --parents "$OUT/expected"
-                                                                                        jq --sort-keys '.' '${ builtins.toFile "standard-error.json" ( builtins.toJSON check-parameters.standard-error ) }' > "$OUT/expected/standard-error"
+                                                                                        jq \
+                                                                                            --sort-keys \
+                                                                                            --rawfile ${ builtins.toFile "compile-time-arguments.json" ( builtins.toJSON check-parameters.compile-time-arguments ) } \
+                                                                                            --RUN_TIME_ARGUMENTS
+                                                                                            '{
+                                                                                                "arguments" :
+                                                                                                    {
+                                                                                                        "compile" : $COMPILE_TIME_ARGUMENTS ,
+                                                                                                        "run" : $RUN_TIME_ARGUMENTS
+                                                                                                    } ,
+                                                                                                "inputs" :
+                                                                                                    {
+                                                                                                    }
+                                                                                            }' > "$OUT/expected/standard-error"
                                                                                         echo -n "" > "$OUT/expected/standard-output"
                                                                                         echo -n ${ root-parameters.error-planned } > "$OUT/expected/status"
                                                                                         mkdir --parents "$OUT/observed"
