@@ -92,7 +92,6 @@
                                         {
                                             compile-time-arguments ? null ,
                                             diffutils ,
-                                            jq ,
                                             mkDerivation ,
                                             order ,
                                             run-time-arguments ? [ ] ,
