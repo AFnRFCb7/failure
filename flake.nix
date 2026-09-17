@@ -11,8 +11,8 @@
                         error-planned ,
                         error-unplanned ,
                         jq ,
-                        writeShellApplication ,
-                        visitor
+                        visitor ,
+                        writeShellApplication
                     } :
                         let
                             implementation =
@@ -119,34 +119,65 @@
                                                                                 name = "install" ;
                                                                                 runtimeInputs = [ root-parameters.coreutils root-parameters.jq ( implementation check-parameters.compile-time-arguments ) ] ;
                                                                                 text =
-                                                                                    ''
-                                                                                        OUT="$1"
-                                                                                        mkdir --parents "$OUT/expected"
-                                                                                        jq \
-                                                                                            --sort-keys \
-                                                                                            --rawfile ${ builtins.toFile "compile-time-arguments.json" ( builtins.toJSON check-parameters.compile-time-arguments ) } \
-                                                                                            --RUN_TIME_ARGUMENTS
-                                                                                            '{
-                                                                                                "arguments" :
-                                                                                                    {
-                                                                                                        "compile" : $COMPILE_TIME_ARGUMENTS ,
-                                                                                                        "run" : $RUN_TIME_ARGUMENTS
-                                                                                                    } ,
-                                                                                                "inputs" :
-                                                                                                    {
-                                                                                                    }
-                                                                                            }' > "$OUT/expected/standard-error"
-                                                                                        echo -n "" > "$OUT/expected/standard-output"
-                                                                                        echo -n ${ root-parameters.error-planned } > "$OUT/expected/status"
-                                                                                        mkdir --parents "$OUT/observed"
-                                                                                        if failure ${ builtins.concatStringsSep " " check-parameters.run-time-arguments } ${ if builtins.typeOf check-parameters.standard-input == "path" then "< ${ check-parameters.standard-input }" else "" } > "$OUT/observed/standard-output" 2> "$OUT/observed/standard-error"
-                                                                                        then
-                                                                                            echo -n "$?" > "$OUT/observed/status"
-                                                                                        else
-                                                                                            echo -n "$?" > "$OUT/observed/status"
-                                                                                        fi
-                                                                                        diff --unified "$OUT/expected" "$OUT/observed"
-                                                                                    '' ;
+                                                                                    if builtins.typeOf check-parameters.standard-input == "null" then
+                                                                                        ''
+                                                                                            OUT="$1"
+                                                                                            mkdir --parents "$OUT/expected"
+                                                                                            jq \
+                                                                                                --null-input \
+                                                                                                --sort-keys \
+                                                                                                --rawfile COMPILE_TIME_ARGUMENTS ${ builtins.toFile "compile-time-arguments.json" ( builtins.toJSON check-parameters.compile-time-arguments ) } \
+                                                                                                --rawfile RUN_TIME_ARGUMENTS ${ builtins.toFile "run-time-arguments.json" ( builtins.toJSON check-parameters.run-time-arguments ) } \                                                                                                --RUN_TIME_ARGUMENTS
+                                                                                                '{
+                                                                                                    "arguments" :
+                                                                                                        {
+                                                                                                            "compile" : $COMPILE_TIME_ARGUMENTS ,
+                                                                                                            "run" : $RUN_TIME_ARGUMENTS
+                                                                                                        } ,
+                                                                                                    "inputs" : { }
+                                                                                                }' > "$OUT/expected/standard-error"
+                                                                                            echo -n "" > "$OUT/expected/standard-output"
+                                                                                            echo -n ${ root-parameters.error-planned } > "$OUT/expected/status"
+                                                                                            mkdir --parents "$OUT/observed"
+                                                                                            if failure ${ builtins.concatStringsSep " " check-parameters.run-time-arguments } ${ if builtins.typeOf check-parameters.standard-input == "path" then "< ${ check-parameters.standard-input }" else "" } > "$OUT/observed/standard-output" 2> "$OUT/observed/standard-error"
+                                                                                            then
+                                                                                                echo -n "$?" > "$OUT/observed/status"
+                                                                                            else
+                                                                                                echo -n "$?" > "$OUT/observed/status"
+                                                                                            fi
+                                                                                            diff --unified "$OUT/expected" "$OUT/observed"
+                                                                                        ''
+                                                                                    else
+                                                                                        ''
+                                                                                            OUT="$1"
+                                                                                            mkdir --parents "$OUT/expected"
+                                                                                            jq \
+                                                                                                --null-input \
+                                                                                                --sort-keys \
+                                                                                                --rawfile COMPILE_TIME_ARGUMENTS ${ builtins.toFile "compile-time-arguments.json" ( builtins.toJSON check-parameters.compile-time-arguments ) } \
+                                                                                                --rawfile RUN_TIME_ARGUMENTS ${ builtins.toFile "run-time-arguments.json" ( builtins.toJSON check-parameters.run-time-arguments ) } \
+                                                                                                '{
+                                                                                                    "arguments" :
+                                                                                                        {
+                                                                                                            "compile" : $COMPILE_TIME_ARGUMENTS ,
+                                                                                                            "run" : $RUN_TIME_ARGUMENTS
+                                                                                                        } ,
+                                                                                                    "inputs" :
+                                                                                                        {
+                                                                                                            "standard" :
+                                                                                                        }
+                                                                                                }' > "$OUT/expected/standard-error"
+                                                                                            echo -n "" > "$OUT/expected/standard-output"
+                                                                                            echo -n ${ root-parameters.error-planned } > "$OUT/expected/status"
+                                                                                            mkdir --parents "$OUT/observed"
+                                                                                            if failure ${ builtins.concatStringsSep " " check-parameters.run-time-arguments } ${ if builtins.typeOf check-parameters.standard-input == "path" then "< ${ check-parameters.standard-input }" else "" } > "$OUT/observed/standard-output" 2> "$OUT/observed/standard-error"
+                                                                                            then
+                                                                                                echo -n "$?" > "$OUT/observed/status"
+                                                                                            else
+                                                                                                echo -n "$?" > "$OUT/observed/status"
+                                                                                            fi
+                                                                                            diff --unified "$OUT/expected" "$OUT/observed"
+                                                                                        '' ;
                                                                             }
                                                                     )
                                                                 ] ;
