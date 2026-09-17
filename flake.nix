@@ -8,8 +8,8 @@
                 lib =
                     {
                         coreutils ,
-                        error-planned ? 64 ,
-                        error-unplanned ? 65 ,
+                        error-planned ? 188 ,
+                        error-unplanned ? 142 ,
                         jq ,
                         mkDerivation ,
                         writeShellApplication ,
@@ -23,17 +23,43 @@
                                     writeShellApplication
                                         {
                                             name = "failure" ;
-                                            runtimeInputs = [ coreutils jq yq-go ] ;
+                                            runtimeInputs = [ coreutils jq ] ;
                                             text =
                                                 ''
-                                                    export COMPILE_TIME_ARGUMENTS_JSON='${ builtins.toJSON ( _visitor.implementation { } compile-time-arguments ) }'
-                                                    RUN_TIME_ARGUMENTS_JSON="$( printf '%s\n' "$@" | jq -R . | jq -s . )" || exit ${ builtins.toString error-unplanned }
-                                                    export RUN_TIME_ARGUMENTS_JSON
-                                                    yq \
-                                                        eval \
-                                                        --null-input \
-                                                        --prettyPrint \
-                                                        '{ "compile-time-arguments" : env(COMPILE_TIME_ARGUMENTS_JSON) , "run-time-arguments" : env(RUN_TIME_ARGUMENTS_JSON) }' >&2
+                                                    export COMPILE_TIME_ARGUMENTS_JSON='${ builtins.toFile "compile-time-arguments.json" ( builtins.toJSON ( _visitor.implementation { } compile-time-arguments ) ) }'
+                                                    if [[ -t 0 ]]
+                                                    then
+                                                        STANDARD_INPUT="$( cat )" || exit ${ builtins.toString error-unplanned }
+                                                        jq \
+                                                            --null-input \
+                                                            --prettyPrint \
+                                                            --argjson "$COMPILE_TIME_ARGUMENTS" \
+                                                            --arg STANDARD_INPUT="$STANDARD_INPUT" \
+                                                            '{
+                                                                "arguments" :
+                                                                    {
+                                                                        "compile" : env(COMPILE_TIME_ARGUMENTS_JSON) ,
+                                                                        "run" : $ARGS.positional
+                                                                    } ,
+                                                                "inputs" :
+                                                                    {
+                                                                        "standard" : $STANDARD_INPUT
+                                                                    }
+                                                            }' -- "$@" >&2
+                                                    else
+                                                        jq \
+                                                            --null-input \
+                                                            --prettyPrint \
+                                                            --argjson "$COMPILE_TIME_ARGUMENTS" \
+                                                            '{
+                                                                "arguments" :
+                                                                    {
+                                                                        "compile" : env(COMPILE_TIME_ARGUMENTS_JSON) ,
+                                                                        "run" : $ARGS.positional
+                                                                    } ,
+                                                                "inputs" : { }
+                                                            }' -- "$@" >&2
+                                                    fi
                                                     exit ${ builtins.toString error-planned }
                                                 '' ;
                                         } ;
