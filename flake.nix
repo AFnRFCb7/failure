@@ -94,7 +94,8 @@
                                             diffutils ,
                                             expected-standard-error ,
                                             mkDerivation ,
-                                            run-time-arguments ? [ ]
+                                            run-time-arguments ? [ ] ,
+                                            standard-input
                                         } :
                                             let
                                                 check-parameters =
@@ -103,6 +104,8 @@
                                                         diffutils = diffutils ;
                                                         expected-standard-error = expected-standard-error ;
                                                         mkDerivation = mkDerivation ;
+                                                        run-time-arguments = runtime-arguments ;
+                                                        standard-input = standard-input ;
                                                     } ;
                                                 in
                                                     check-parameters.mkDerivation
@@ -119,30 +122,18 @@
                                                                                 text =
                                                                                     ''
                                                                                         OUT="$1"
-                                                                                        mkdir --parents "$OUT/test"
-                                                                                        if failure ${ builtins.concatStringsSep " " run-time-arguments } > /build/test/standard-output 2> /build/test/standard-error
+                                                                                        mkdir --parents "$OUT/expected"
+                                                                                        ln --symbolic ${ check-parameters.standard-error } "$OUT/expected/standard-error"
+                                                                                        ln --symbolic ${ check-parameters.standard-output } "$OUT/expected/standard-output"
+                                                                                        ln --symbolic ${ check-parameters.status } "$OUT/expected/status"
+                                                                                        mkdir --parents "$OUT/observed"
+                                                                                        if failure ${ builtins.concatStringsSep " " check-parameters.run-time-arguments } ${ if builtins.typeOf check-parameters.standard-input == "path" then "< ${ check-parameters.standard-input }" else "" } > "$OUT/observed/standard-output" 2> "$OUT/observed/standard-error"
                                                                                         then
-                                                                                            STATUS="$?"
+                                                                                            echo "$?" > "$OUT/observed/status"
                                                                                         else
-                                                                                            STATUS="$?"
+                                                                                            echo "$?" > "$OUT/observed/status"
                                                                                         fi
-                                                                                        STANDARD_OUTPUT="$( cat /build/test/standard-output )" || exit ${ builtins.toString error-unplanned }
-                                                                                        if [[ -n "$STANDARD_OUTPUT" ]]
-                                                                                        then
-                                                                                            echo "We expected no standard output but we got $STANDARD_OUTPUT" >&2
-                                                                                            exit ${ builtins.toString error-planned }
-                                                                                        fi
-                                                                                        if ! diff --unified ${ builtins.toFile "standard-error"  expected-standard-error } /build/test/standard-error
-                                                                                        then
-                                                                                            echo "We expected standard error to be ${ builtins.toFile "standard-error" expected-standard-error } but it was:" >&2
-                                                                                            cat /build/test/standard-error >&2
-                                                                                            exit ${ builtins.toString error-planned }
-                                                                                        fi
-                                                                                        if [[ "$STATUS" != "64" ]]
-                                                                                        then
-                                                                                            echo "We expected the status to be 64 but we got $STATUS" >&2
-                                                                                            exit ${ builtins.toString error-planned }
-                                                                                        fi
+                                                                                        diff --unified "$OUT/expected" "$OUT/observed"
                                                                                     '' ;
                                                                             } ;
                                                                     in
