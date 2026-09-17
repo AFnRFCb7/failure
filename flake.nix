@@ -23,7 +23,13 @@
                                                 compile-time-arguments =
                                                     visitor
                                                         {
-
+                                                            bool = path : value : value ;
+                                                            float = path : value : value ;
+                                                            int = path : value : value ;
+                                                            lambda = path : value : null ;
+                                                            null = path : value : value ;
+                                                            path = path : value : value ;
+                                                            string = path : value : value ;
                                                         }
                                                         compile-time-arguments ;
                                             } ;
@@ -34,7 +40,7 @@
                                                     runtimeInputs = [ root-parameters.coreutils root-parameters.jq ] ;
                                                     text =
                                                         ''
-                                                            export COMPILE_TIME_ARGUMENTS_JSON='${ builtins.toFile "compile-time-arguments.json" ( builtins.toJSON ( _visitor { } compile-time-arguments ) ) }'
+                                                            export COMPILE_TIME_ARGUMENTS_JSON='${ builtins.toFile "compile-time-arguments.json" implementation-parameters.compile-time-arguments }'
                                                             if [[ -t 0 ]]
                                                             then
                                                                 STANDARD_INPUT="$( cat )" || exit ${ builtins.toString root-parameters.error-unplanned }
@@ -77,7 +83,6 @@
                                             error-planned = _visitor { int = path : value : builtins.toString value ; } error-planned ;
                                             error-unplanned = _visitor { init = path : value : builtins.toString value ; } error-unplanned ;
                                             jq = jq ;
-                                            mkDerivation = mkDerivation ;
                                             writeShellApplication = writeShellApplication ;
                                             visitor = visitor ;
                                         } ;
@@ -86,57 +91,67 @@
                                     check =
                                         {
                                             compile-time-arguments ? null ,
-                                            diffutil ,
+                                            diffutils ,
                                             expected-standard-error ,
                                             mkDerivation ,
                                             run-time-arguments ? [ ]
                                         } :
-                                            mkDerivation
-                                                {
-                                                    installPhase =
-                                                        let
-                                                            test =
-                                                                writeShellApplication
-                                                                    {
-                                                                        name = "test" ;
-                                                                        runtimeInputs = [ coreutils yq-go ( implementation compile-time-arguments ) ] ;
-                                                                        text =
-                                                                            ''
-                                                                                OUT="$1"
-                                                                                touch "$OUT"
-                                                                                mkdir --parents /build/test
-                                                                                if failure ${ builtins.concatStringsSep " " run-time-arguments } > /build/test/standard-output 2> /build/test/standard-error
-                                                                                then
-                                                                                    STATUS="$?"
-                                                                                else
-                                                                                    STATUS="$?"
-                                                                                fi
-                                                                                STANDARD_OUTPUT="$( cat /build/test/standard-output )" || exit ${ builtins.toString error-unplanned }
-                                                                                if [[ -n "$STANDARD_OUTPUT" ]]
-                                                                                then
-                                                                                    echo "We expected no standard output but we got $STANDARD_OUTPUT" >&2
-                                                                                    exit ${ builtins.toString error-planned }
-                                                                                fi
-                                                                                if ! diff --unified ${ builtins.toFile "standard-error"  expected-standard-error } /build/test/standard-error
-                                                                                then
-                                                                                    echo "We expected standard error to be ${ builtins.toFile "standard-error" expected-standard-error } but it was:" >&2
-                                                                                    cat /build/test/standard-error >&2
-                                                                                    exit ${ builtins.toString error-planned }
-                                                                                fi
-                                                                                if [[ "$STATUS" != "64" ]]
-                                                                                then
-                                                                                    echo "We expected the status to be 64 but we got $STATUS" >&2
-                                                                                    exit ${ builtins.toString error-planned }
-                                                                                fi
-                                                                            '' ;
-                                                                    } ;
-                                                            in
-                                                                ''
-                                                                    ${ test }/bin/test "$out"
-                                                                '' ;
-                                                    name = "check" ;
-                                                    src = ./. ;
-                                                } ;
+                                            let
+                                                check-parameters =
+                                                    {
+                                                        compile-time-arguments = compile-time-arguments ;
+                                                        diffutils = diffutils ;
+                                                        expected-standard-error = expected-standard-error ;
+                                                        mkDerivation = mkDerivation ;
+                                                    } ;
+                                                in
+                                                    check-parameters.mkDerivation
+                                                        {
+                                                            installPhase = ''install $out'' ;
+                                                            name = "check" ;
+                                                            nativeBuildInputs =
+                                                                [
+                                                                    (
+                                                                        writeShellApplication
+                                                                            {
+                                                                                name = "test" ;
+                                                                                runtimeInputs = [ root-parameters.coreutils ( implementation check-parameters.compile-time-arguments ) ] ;
+                                                                                text =
+                                                                                    ''
+                                                                                        OUT="$1"
+                                                                                        mkdir --parents "$OUT/test"
+                                                                                        if failure ${ builtins.concatStringsSep " " run-time-arguments } > /build/test/standard-output 2> /build/test/standard-error
+                                                                                        then
+                                                                                            STATUS="$?"
+                                                                                        else
+                                                                                            STATUS="$?"
+                                                                                        fi
+                                                                                        STANDARD_OUTPUT="$( cat /build/test/standard-output )" || exit ${ builtins.toString error-unplanned }
+                                                                                        if [[ -n "$STANDARD_OUTPUT" ]]
+                                                                                        then
+                                                                                            echo "We expected no standard output but we got $STANDARD_OUTPUT" >&2
+                                                                                            exit ${ builtins.toString error-planned }
+                                                                                        fi
+                                                                                        if ! diff --unified ${ builtins.toFile "standard-error"  expected-standard-error } /build/test/standard-error
+                                                                                        then
+                                                                                            echo "We expected standard error to be ${ builtins.toFile "standard-error" expected-standard-error } but it was:" >&2
+                                                                                            cat /build/test/standard-error >&2
+                                                                                            exit ${ builtins.toString error-planned }
+                                                                                        fi
+                                                                                        if [[ "$STATUS" != "64" ]]
+                                                                                        then
+                                                                                            echo "We expected the status to be 64 but we got $STATUS" >&2
+                                                                                            exit ${ builtins.toString error-planned }
+                                                                                        fi
+                                                                                    '' ;
+                                                                            } ;
+                                                                    in
+                                                                        ''
+                                                                            ${ test }/bin/test "$out"
+                                                                        '' ;
+                                                            name = "check" ;
+                                                            src = ./. ;
+                                                        } ;
                                     implementation = implementation ;
                                 } ;
             } ;
