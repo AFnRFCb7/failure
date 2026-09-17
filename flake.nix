@@ -188,7 +188,7 @@
                                                     {
                                                         name = builtins.concatStringsSep "-" [ "check" ( builtins.toString check-parameters.order ) ] ;
                                                         order = check-parameters.order ;
-                                                        value = value ;
+                                                        value = dependencies : value ;
                                                     } ;
                                     implementation = implementation ;
                                 } ;
