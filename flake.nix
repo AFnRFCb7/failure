@@ -92,6 +92,7 @@
                                         {
                                             compile-time-arguments ? null ,
                                             diffutils ,
+                                            jq ,
                                             mkDerivation ,
                                             run-time-arguments ? [ ] ,
                                             standard-error ,
@@ -104,12 +105,7 @@
                                                         diffutils = diffutils ;
                                                         mkDerivation = mkDerivation ;
                                                         run-time-arguments = run-time-arguments ;
-                                                        standard-error =
-                                                            visitor
-                                                                {
-                                                                    path = path : value : value ;
-                                                                    string = path : value : builtins.toFile "standard-error" value ;
-                                                                } standard-error ;
+                                                        standard-error = standard-error ;
                                                         standard-input = standard-input ;
                                                     } ;
                                                 in
@@ -123,12 +119,12 @@
                                                                         writeShellApplication
                                                                             {
                                                                                 name = "install" ;
-                                                                                runtimeInputs = [ root-parameters.coreutils ( implementation check-parameters.compile-time-arguments ) ] ;
+                                                                                runtimeInputs = [ root-parameters.coreutils root-parameters.jq ( implementation check-parameters.compile-time-arguments ) ] ;
                                                                                 text =
                                                                                     ''
                                                                                         OUT="$1"
                                                                                         mkdir --parents "$OUT/expected"
-                                                                                        ln --symbolic ${ check-parameters.standard-error } "$OUT/expected/standard-error"
+                                                                                        jq --sort-keys '.' '${ builtins.toFile "standard-error.json" ( builtins.toJSON check-parameters.standard-error ) }' > "$OUT/expected/standard-error"
                                                                                         echo -n "" > "$OUT/expected/standard-output"
                                                                                         echo -n ${ root-parameters.error-planned } > "$OUT/expected/status"
                                                                                         mkdir --parents "$OUT/observed"
