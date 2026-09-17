@@ -94,6 +94,7 @@
                                             diffutils ,
                                             jq ,
                                             mkDerivation ,
+                                            order ,
                                             run-time-arguments ? [ ] ,
                                             standard-input
                                         } :
@@ -103,10 +104,11 @@
                                                         compile-time-arguments = compile-time-arguments ;
                                                         diffutils = diffutils ;
                                                         mkDerivation = mkDerivation ;
+                                                        order = order ;
                                                         run-time-arguments = run-time-arguments ;
                                                         standard-input = standard-input ;
                                                     } ;
-                                                in
+                                                value =
                                                     check-parameters.mkDerivation
                                                         {
                                                             installPhase = ''install $out'' ;
@@ -183,6 +185,12 @@
                                                                 ] ;
                                                             src = ./. ;
                                                         } ;
+                                                in
+                                                    {
+                                                        name = builtins.concatStringsSep "" [ "check" ( builtins.toString check-parameters.order ) ] ;
+                                                        order = check-parameters.order ;
+                                                        value = value ;
+                                                    } ;
                                     implementation = implementation ;
                                 } ;
             } ;
