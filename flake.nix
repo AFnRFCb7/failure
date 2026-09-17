@@ -19,21 +19,24 @@
                             _visitor =
                                 parameters.visitor
                                     {
-                                        default = path : value : let type = builtins.typeOf value ; in { path = path ; type = type ; value = if type == "lambda" then null else value ; } ;
-                                        unknown = path : value : builtins.throw "unknown" ;
+                                        default =
+                                            path : value :
+                                                let
+                                                    type = builtins.typeOf value ;
+                                                    in { path = path ; type = type ; value = if type == "lambda" then null else value ; } ;
                                     } ;
                             implementation =
                                 compile-time-arguments :
                                     writeShellApplication
                                         {
                                             name = "failure" ;
-                                            runtimeInputs = [ coreutils jq ] ;
+                                            runtimeInputs = [ parameters.coreutils parameters.jq ] ;
                                             text =
                                                 ''
-                                                    export COMPILE_TIME_ARGUMENTS_JSON='${ builtins.toFile "compile-time-arguments.json" ( builtins.toJSON ( _visitor.implementation { } compile-time-arguments ) ) }'
+                                                    export COMPILE_TIME_ARGUMENTS_JSON='${ builtins.toFile "compile-time-arguments.json" ( builtins.toJSON ( _visitor { } compile-time-arguments ) ) }'
                                                     if [[ -t 0 ]]
                                                     then
-                                                        STANDARD_INPUT="$( cat )" || exit ${ builtins.toString error-unplanned }
+                                                        STANDARD_INPUT="$( cat )" || exit ${ builtins.toString parameters.error-unplanned }
                                                         jq \
                                                             --null-input \
                                                             --prettyPrint \
@@ -64,14 +67,14 @@
                                                                 "inputs" : { }
                                                             }' -- "$@" >&2
                                                     fi
-                                                    exit ${ builtins.toString error-planned }
+                                                    exit ${ builtins.toString parameters.error-planned }
                                                 '' ;
                                         } ;
                             parameters =
                                 {
                                     coreutils = coreutils ;
-                                    error-planned = error-planned ;
-                                    error-unplanned = error-unplanned ;
+                                    error-planned = _visitor { int = path : value : builtins.toString value ; } error-planned ;
+                                    error-unplanned = _visitor { init = path : value : builtins.toString value ; } error-unplanned ;
                                     jq = jq ;
                                     mkDerivation = mkDerivation ;
                                     writeShellApplication = writeShellApplication ;
