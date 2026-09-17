@@ -8,78 +8,79 @@
                 lib =
                     {
                         coreutils ,
-                        error-planned ? 188 ,
-                        error-unplanned ? 142 ,
+                        error-planned ,
+                        error-unplanned ,
                         jq ,
-                        mkDerivation ,
                         writeShellApplication ,
                         visitor
                     } :
                         let
-                            _visitor =
-                                parameters.visitor
-                                    {
-                                        default =
-                                            path : value :
-                                                let
-                                                    type = builtins.typeOf value ;
-                                                    in { path = path ; type = type ; value = if type == "lambda" then null else value ; } ;
-                                    } ;
                             implementation =
                                 compile-time-arguments :
-                                    writeShellApplication
+                                    let
+                                        implementation-parameters =
+                                            {
+                                                compile-time-arguments =
+                                                    visitor
+                                                        {
+
+                                                        }
+                                                        compile-time-arguments ;
+                                            } ;
+                                        in
+                                            root-parameters.writeShellApplication
+                                                {
+                                                    name = "failure" ;
+                                                    runtimeInputs = [ root-parameters.coreutils root-parameters.jq ] ;
+                                                    text =
+                                                        ''
+                                                            export COMPILE_TIME_ARGUMENTS_JSON='${ builtins.toFile "compile-time-arguments.json" ( builtins.toJSON ( _visitor { } compile-time-arguments ) ) }'
+                                                            if [[ -t 0 ]]
+                                                            then
+                                                                STANDARD_INPUT="$( cat )" || exit ${ builtins.toString root-parameters.error-unplanned }
+                                                                jq \
+                                                                    --null-input \
+                                                                    --prettyPrint \
+                                                                    --argjson "$COMPILE_TIME_ARGUMENTS" \
+                                                                    --arg STANDARD_INPUT="$STANDARD_INPUT" \
+                                                                    '{
+                                                                        "arguments" :
+                                                                            {
+                                                                                "compile" : env(COMPILE_TIME_ARGUMENTS_JSON) ,
+                                                                                "run" : $ARGS.positional
+                                                                            } ,
+                                                                        "inputs" :
+                                                                            {
+                                                                                "standard" : $STANDARD_INPUT
+                                                                            }
+                                                                    }' -- "$@" >&2
+                                                            else
+                                                                jq \
+                                                                    --null-input \
+                                                                    --prettyPrint \
+                                                                    --argjson "$COMPILE_TIME_ARGUMENTS" \
+                                                                    '{
+                                                                        "arguments" :
+                                                                            {
+                                                                                "compile" : env(COMPILE_TIME_ARGUMENTS_JSON) ,
+                                                                                "run" : $ARGS.positional
+                                                                            } ,
+                                                                        "inputs" : { }
+                                                                    }' -- "$@" >&2
+                                                            fi
+                                                            exit ${ builtins.toString root-parameters.error-planned }
+                                                        '' ;
+                                                } ;
+                                    root-parameters =
                                         {
-                                            name = "failure" ;
-                                            runtimeInputs = [ parameters.coreutils parameters.jq ] ;
-                                            text =
-                                                ''
-                                                    export COMPILE_TIME_ARGUMENTS_JSON='${ builtins.toFile "compile-time-arguments.json" ( builtins.toJSON ( _visitor { } compile-time-arguments ) ) }'
-                                                    if [[ -t 0 ]]
-                                                    then
-                                                        STANDARD_INPUT="$( cat )" || exit ${ builtins.toString parameters.error-unplanned }
-                                                        jq \
-                                                            --null-input \
-                                                            --prettyPrint \
-                                                            --argjson "$COMPILE_TIME_ARGUMENTS" \
-                                                            --arg STANDARD_INPUT="$STANDARD_INPUT" \
-                                                            '{
-                                                                "arguments" :
-                                                                    {
-                                                                        "compile" : env(COMPILE_TIME_ARGUMENTS_JSON) ,
-                                                                        "run" : $ARGS.positional
-                                                                    } ,
-                                                                "inputs" :
-                                                                    {
-                                                                        "standard" : $STANDARD_INPUT
-                                                                    }
-                                                            }' -- "$@" >&2
-                                                    else
-                                                        jq \
-                                                            --null-input \
-                                                            --prettyPrint \
-                                                            --argjson "$COMPILE_TIME_ARGUMENTS" \
-                                                            '{
-                                                                "arguments" :
-                                                                    {
-                                                                        "compile" : env(COMPILE_TIME_ARGUMENTS_JSON) ,
-                                                                        "run" : $ARGS.positional
-                                                                    } ,
-                                                                "inputs" : { }
-                                                            }' -- "$@" >&2
-                                                    fi
-                                                    exit ${ builtins.toString parameters.error-planned }
-                                                '' ;
+                                            coreutils = coreutils ;
+                                            error-planned = _visitor { int = path : value : builtins.toString value ; } error-planned ;
+                                            error-unplanned = _visitor { init = path : value : builtins.toString value ; } error-unplanned ;
+                                            jq = jq ;
+                                            mkDerivation = mkDerivation ;
+                                            writeShellApplication = writeShellApplication ;
+                                            visitor = visitor ;
                                         } ;
-                            parameters =
-                                {
-                                    coreutils = coreutils ;
-                                    error-planned = _visitor { int = path : value : builtins.toString value ; } error-planned ;
-                                    error-unplanned = _visitor { init = path : value : builtins.toString value ; } error-unplanned ;
-                                    jq = jq ;
-                                    mkDerivation = mkDerivation ;
-                                    writeShellApplication = writeShellApplication ;
-                                    visitor = visitor ;
-                                } ;
                             in
                                 {
                                     check =
@@ -87,6 +88,7 @@
                                             compile-time-arguments ? null ,
                                             diffutil ,
                                             expected-standard-error ,
+                                            mkDerivation ,
                                             run-time-arguments ? [ ]
                                         } :
                                             mkDerivation
