@@ -138,7 +138,6 @@
                                                                             }
                                                                     )
                                                                 ] ;
-                                                            name = "check" ;
                                                             src = ./. ;
                                                         } ;
                                     implementation = implementation ;
