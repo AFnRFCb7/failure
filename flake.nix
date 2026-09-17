@@ -80,8 +80,8 @@
                                     root-parameters =
                                         {
                                             coreutils = coreutils ;
-                                            error-planned = _visitor { int = path : value : builtins.toString value ; } error-planned ;
-                                            error-unplanned = _visitor { init = path : value : builtins.toString value ; } error-unplanned ;
+                                            error-planned = visitor { int = path : value : builtins.toString value ; } error-planned ;
+                                            error-unplanned = visitor { init = path : value : builtins.toString value ; } error-unplanned ;
                                             jq = jq ;
                                             writeShellApplication = writeShellApplication ;
                                             visitor = visitor ;
