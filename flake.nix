@@ -81,7 +81,7 @@
                                         {
                                             coreutils = coreutils ;
                                             error-planned = visitor { int = path : value : builtins.toString value ; } error-planned ;
-                                            error-unplanned = visitor { init = path : value : builtins.toString value ; } error-unplanned ;
+                                            error-unplanned = visitor { int = path : value : builtins.toString value ; } error-unplanned ;
                                             jq = jq ;
                                             writeShellApplication = writeShellApplication ;
                                             visitor = visitor ;
@@ -263,17 +263,11 @@
                                                                 ] ;
                                                             src = ./. ;
                                                         } ;
-                                                xxx =
+                                                in =
                                                     {
                                                         name = builtins.concatStringsSep "-" [ "check" ( builtins.toString check-parameters.order ) ] ;
                                                         order = check-parameters.order ;
                                                         value = dependencies : value ;
-                                                    } ;
-                                                in
-                                                    {
-                                                        name = builtins.concatStringsSep "-" [ "check" ( builtins.toString check-parameters.order ) ] ;
-                                                        order = check-parameters.order ;
-                                                        value = dependencies : value-xxx ;
                                                     } ;
                                     implementation = implementation ;
                                 } ;
