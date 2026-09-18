@@ -124,12 +124,14 @@
                                                                                         ''
                                                                                             echo 1723258852938545 7364275125863717 "$0" >&2
                                                                                             OUT="$1"
+                                                                                            COMPILE_TIME_ARGUMENTS="$( cat ${ builtins.toFile "compile-time-arguments.json" ( builtins.toJSON check-parameters.compile-time-arguments ) } )" || exit ${ root-parameters.error-unplanned }
+                                                                                            RUN_TIME_ARGUMENTS="$( cat ${ builtins.toFile "run-time-arguments.json" ( builtins.toJSON check-parameters.run-time-arguments ) } )" || exit ${ root-parameters.error-unplanned }
                                                                                             mkdir --parents "$OUT/expected"
                                                                                             jq \
                                                                                                 --null-input \
                                                                                                 --sort-keys \
-                                                                                                --rawfile COMPILE_TIME_ARGUMENTS ${ builtins.toFile "compile-time-arguments.json" ( builtins.toJSON check-parameters.compile-time-arguments ) } \
-                                                                                                --rawfile RUN_TIME_ARGUMENTS ${ builtins.toFile "run-time-arguments.json" ( builtins.toJSON check-parameters.run-time-arguments ) } \
+                                                                                                --argjson COMPILE_TIME_ARGUMENTS "$COMPILE_TIME_ARGUMENTS" \
+                                                                                                --argjson RUN_TIME_ARGUMENTS "$RUN_TIME_ARGUMENTS" \
                                                                                                 '{
                                                                                                     "arguments" :
                                                                                                         {
@@ -154,11 +156,13 @@
                                                                                             echo 1723258852938545 2962467655196547 "$0" >&2
                                                                                             OUT="$1"
                                                                                             mkdir --parents "$OUT/expected"
+                                                                                            COMPILE_TIME_ARGUMENTS="$( cat ${ builtins.toFile "compile-time-arguments.json" ( builtins.toJSON check-parameters.compile-time-arguments ) } )" || exit ${ root-parameters.error-unplanned }
+                                                                                            RUN_TIME_ARGUMENTS="$( cat ${ builtins.toFile "run-time-arguments.json" ( builtins.toJSON check-parameters.run-time-arguments ) } )" || exit ${ root-parameters.error-unplanned }
                                                                                             jq \
                                                                                                 --null-input \
                                                                                                 --sort-keys \
-                                                                                                --rawfile COMPILE_TIME_ARGUMENTS ${ builtins.toFile "compile-time-arguments.json" ( builtins.toJSON check-parameters.compile-time-arguments ) } \
-                                                                                                --rawfile RUN_TIME_ARGUMENTS ${ builtins.toFile "run-time-arguments.json" ( builtins.toJSON check-parameters.run-time-arguments ) } \
+                                                                                                --argjson COMPILE_TIME_ARGUMENTS "$COMPILE_TIME_ARGUMENTS" \
+                                                                                                --argjson RUN_TIME_ARGUMENTS "$RUN_TIME_ARGUMENTS" \
                                                                                                 --rawfile STANDARD_INPUT ${ check-parameters.standard-input } \
                                                                                                 '{
                                                                                                     "arguments" :
