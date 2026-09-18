@@ -90,12 +90,12 @@
                                 {
                                     check =
                                         {
-                                            compile-time-arguments ,
+                                            compile-time-arguments ? null ,
                                             diffutils ,
                                             mkDerivation ,
                                             order ,
                                             run-time-arguments ? [ ] ,
-                                            standard-input
+                                            standard-input ? null
                                         } :
                                             let
                                                 check-parameters =
