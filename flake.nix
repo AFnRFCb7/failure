@@ -156,7 +156,7 @@
                                                                                             OUT="$1"
                                                                                             echo 1723258852938545 2962467655196547 "$0" >&2
                                                                                             mkdir --parents "$OUT/expected"
-                                                                                            echo 1723258852938545 8453473237732375 >&2
+                                                                                            echo 1723258852938545 8453473237732375 "$0" "$OUT" >&2
                                                                                             COMPILE_TIME_ARGUMENTS="$( cat ${ builtins.toFile "compile-time-arguments.json" ( builtins.toJSON check-parameters.compile-time-arguments ) } )" || exit ${ root-parameters.error-unplanned }
                                                                                             RUN_TIME_ARGUMENTS="$( cat ${ builtins.toFile "run-time-arguments.json" ( builtins.toJSON check-parameters.run-time-arguments ) } )" || exit ${ root-parameters.error-unplanned }
                                                                                             jq \
