@@ -90,10 +90,12 @@
                                 {
                                     check =
                                         {
-                                            compile-time-arguments ? null ,
                                             diffutils ,
                                             mkDerivation ,
-                                            order ,
+                                            order
+                                        } :
+                                        compile-time-arguments :
+                                        {
                                             run-time-arguments ? [ ] ,
                                             standard-input ? null
                                         } :
