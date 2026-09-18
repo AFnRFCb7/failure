@@ -263,7 +263,7 @@
                                                                 ] ;
                                                             src = ./. ;
                                                         } ;
-                                                in =
+                                                in
                                                     {
                                                         name = builtins.concatStringsSep "-" [ "check" ( builtins.toString check-parameters.order ) ] ;
                                                         order = check-parameters.order ;
