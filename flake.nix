@@ -48,6 +48,7 @@
                                                                     --argjson COMPILE_TIME_ARGUMENTS "$COMPILE_TIME_ARGUMENTS" \
                                                                     --args \
                                                                     '{
+                                                                        "WTF" : 4438415433989556 ,
                                                                         "arguments" :
                                                                             {
                                                                                 "compile" : $COMPILE_TIME_ARGUMENTS ,
@@ -63,6 +64,7 @@
                                                                     --arg STANDARD_INPUT "$STANDARD_INPUT" \
                                                                     --args \
                                                                     '{
+                                                                        "WTF" : 4387375293752358 ,
                                                                         "arguments" :
                                                                             {
                                                                                 "compile" : $COMPILE_TIME_ARGUMENTS ,
@@ -182,7 +184,6 @@
                                                                                             else
                                                                                                 echo -n "$?" > "$OUT/observed/status"
                                                                                             fi
-                                                                                            echo "$0" "$OUT" >&2
                                                                                             diff --unified "$OUT/expected" "$OUT/observed"
                                                                                         '' ;
                                                                             }
