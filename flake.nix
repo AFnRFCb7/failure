@@ -192,14 +192,14 @@
                                                             name = "check" ;
                                                             nativeBuildInputs =
                                                                 [
-#                                                                    (
-#                                                                        writeShellApplication
-#                                                                            {
-#                                                                                name = "install" ;
-#                                                                                runtimeInputs = [ root-parameters.coreutils root-parameters.jq ( implementation check-parameters.compile-time-arguments ) ] ;
-#                                                                                text =
-#                                                                                    if builtins.typeOf check-parameters.standard-input == "null" then
-#                                                                                        ''
+                                                                    (
+                                                                        writeShellApplication
+                                                                            {
+                                                                                name = "install" ;
+                                                                                runtimeInputs = [ root-parameters.coreutils root-parameters.jq ( implementation check-parameters.compile-time-arguments ) ] ;
+                                                                                text =
+                                                                                    if builtins.typeOf check-parameters.standard-input == "null" then
+                                                                                        ''
 #                                                                                            OUT="$1"
 #                                                                                            mkdir --parents "$OUT/expected"
 #                                                                                            jq \
@@ -257,9 +257,9 @@
 #                                                                                                echo -n "$?" > "$OUT/observed/status"
 #                                                                                            fi
 #                                                                                            diff --unified "$OUT/expected" "$OUT/observed"
-#                                                                                        '' ;
-#                                                                            }
-#                                                                    )
+                                                                                        '' ;
+                                                                            }
+                                                                    )
                                                                 ] ;
                                                             src = ./. ;
                                                         } ;
