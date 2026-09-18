@@ -226,7 +226,7 @@
 #                                                                                            fi
 #                                                                                            diff --unified "$OUT/expected" "$OUT/observed"
 #                                                                                        ''
-#                                                                                    else
+                                                                                    else
 #                                                                                        ''
 #                                                                                            OUT="$1"
 #                                                                                            mkdir --parents "$OUT/expected"
