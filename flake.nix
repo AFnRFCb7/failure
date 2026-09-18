@@ -47,12 +47,12 @@
                                                                 jq \
                                                                     --null-input \
                                                                     --prettyPrint \
-                                                                    --argjson "$COMPILE_TIME_ARGUMENTS" \
+                                                                    --argjson COMPILE_TIME_ARGUMENTS "$COMPILE_TIME_ARGUMENTS" \
                                                                     --arg STANDARD_INPUT="$STANDARD_INPUT" \
                                                                     '{
                                                                         "arguments" :
                                                                             {
-                                                                                "compile" : env(COMPILE_TIME_ARGUMENTS_JSON) ,
+                                                                                "compile" : $COMPILE_TIME_ARGUMENTS ,
                                                                                 "run" : $ARGS.positional
                                                                             } ,
                                                                         "inputs" :
@@ -64,11 +64,11 @@
                                                                 jq \
                                                                     --null-input \
                                                                     --prettyPrint \
-                                                                    --argjson "$COMPILE_TIME_ARGUMENTS" \
+                                                                    --argjson COMPILE_TIME_ARGUMENTS "$COMPILE_TIME_ARGUMENTS" \
                                                                     '{
                                                                         "arguments" :
                                                                             {
-                                                                                "compile" : env(COMPILE_TIME_ARGUMENTS_JSON) ,
+                                                                                "compile" : $COMPILE_TIME_ARGUMENTS ,
                                                                                 "run" : $ARGS.positional
                                                                             } ,
                                                                         "inputs" : { }
