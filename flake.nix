@@ -185,6 +185,84 @@
                                                                 ] ;
                                                             src = ./. ;
                                                         } ;
+                                                value-xxx =
+                                                    check-parameters.mkDerivation
+                                                        {
+                                                            installPhase = ''install $0'' ;
+                                                            name = "check" ;
+                                                            nativeBuildInputs =
+                                                                [
+                                                                    (
+                                                                        writeShellApplication
+                                                                            {
+                                                                                name = "install" ;
+                                                                                runtimeInputs = [ root-parameters.coreutils root-parameters.jq ( implementation check-parameters.compile-time-arguments ) ] ;
+                                                                                text =
+                                                                                    if builtins.typeOf check-parameters.standard-input == "null" then
+                                                                                        ''
+                                                                                            OUT="$1"
+                                                                                            mkdir --parents "$OUT/expected"
+                                                                                            jq \
+                                                                                                --null-input \
+                                                                                                --sort-keys \
+                                                                                                --rawfile COMPILE_TIME_ARGUMENTS ${ builtins.toFile "compile-time-arguments.json" ( builtins.toJSON check-parameters.compile-time-arguments ) } \
+                                                                                                --rawfile RUN_TIME_ARGUMENTS ${ builtins.toFile "run-time-arguments.json" ( builtins.toJSON check-parameters.run-time-arguments ) } \
+                                                                                                '{
+                                                                                                    "arguments" :
+                                                                                                        {
+                                                                                                            "compile" : $COMPILE_TIME_ARGUMENTS ,
+                                                                                                            "run" : $RUN_TIME_ARGUMENTS
+                                                                                                        } ,
+                                                                                                    "inputs" : { }
+                                                                                                }' > "$OUT/expected/standard-error"
+                                                                                            echo -n "" > "$OUT/expected/standard-output"
+                                                                                            echo -n ${ root-parameters.error-planned } > "$OUT/expected/status"
+                                                                                            mkdir --parents "$OUT/observed"
+                                                                                            if failure ${ builtins.concatStringsSep " " check-parameters.run-time-arguments } ${ if builtins.typeOf check-parameters.standard-input == "path" then "< ${ check-parameters.standard-input }" else "" } > "$OUT/observed/standard-output" 2> "$OUT/observed/standard-error"
+                                                                                            then
+                                                                                                echo -n "$?" > "$OUT/observed/status"
+                                                                                            else
+                                                                                                echo -n "$?" > "$OUT/observed/status"
+                                                                                            fi
+                                                                                            diff --unified "$OUT/expected" "$OUT/observed"
+                                                                                        ''
+                                                                                    else
+                                                                                        ''
+                                                                                            OUT="$1"
+                                                                                            mkdir --parents "$OUT/expected"
+                                                                                            jq \
+                                                                                                --null-input \
+                                                                                                --sort-keys \
+                                                                                                --rawfile COMPILE_TIME_ARGUMENTS ${ builtins.toFile "compile-time-arguments.json" ( builtins.toJSON check-parameters.compile-time-arguments ) } \
+                                                                                                --rawfile RUN_TIME_ARGUMENTS ${ builtins.toFile "run-time-arguments.json" ( builtins.toJSON check-parameters.run-time-arguments ) } \
+                                                                                                --rawfile STANDARD_INPUT ${ check-parameters.standard-input } \
+                                                                                                '{
+                                                                                                    "arguments" :
+                                                                                                        {
+                                                                                                            "compile" : $COMPILE_TIME_ARGUMENTS ,
+                                                                                                            "run" : $RUN_TIME_ARGUMENTS
+                                                                                                        } ,
+                                                                                                    "inputs" :
+                                                                                                        {
+                                                                                                            "standard" : $STANDARD_INPUT
+                                                                                                        }
+                                                                                                }' > "$OUT/expected/standard-error"
+                                                                                            echo -n "" > "$OUT/expected/standard-output"
+                                                                                            echo -n ${ root-parameters.error-planned } > "$OUT/expected/status"
+                                                                                            mkdir --parents "$OUT/observed"
+                                                                                            if failure ${ builtins.concatStringsSep " " check-parameters.run-time-arguments } ${ if builtins.typeOf check-parameters.standard-input == "path" then "< ${ check-parameters.standard-input }" else "" } > "$OUT/observed/standard-output" 2> "$OUT/observed/standard-error"
+                                                                                            then
+                                                                                                echo -n "$?" > "$OUT/observed/status"
+                                                                                            else
+                                                                                                echo -n "$?" > "$OUT/observed/status"
+                                                                                            fi
+                                                                                            diff --unified "$OUT/expected" "$OUT/observed"
+                                                                                        '' ;
+                                                                            }
+                                                                    )
+                                                                ] ;
+                                                            src = ./. ;
+                                                        } ;
                                                 xxx =
                                                     {
                                                         name = builtins.concatStringsSep "-" [ "check" ( builtins.toString check-parameters.order ) ] ;
@@ -193,9 +271,9 @@
                                                     } ;
                                                 in
                                                     {
-                                                        name = "check-0" ;
-                                                        order = 0 ;
-                                                        value = dependencies : check-parameters.mkDerivation { installPhase = "touch $out" ; name = "check-0" ; src = ./. ; } ;
+                                                        name = builtins.concatStringsSep "-" [ "check" ( builtins.toString check-parameters.order ) ] ;
+                                                        order = check-parameters.order ;
+                                                        value = dependencies : value-xxx ;
                                                     } ;
                                     implementation = implementation ;
                                 } ;
