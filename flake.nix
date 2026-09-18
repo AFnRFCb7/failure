@@ -105,7 +105,7 @@
                                                         mkDerivation = mkDerivation ;
                                                         order = order ;
                                                         run-time-arguments = run-time-arguments ;
-                                                        standard-input = standard-input ;
+                                                        standard-input = root-parameters.visitor { null = path : value : value ; string = path : value : builtins.toFile "standard-input" value ; } standard-input ;
                                                     } ;
                                                 value =
                                                     check-parameters.mkDerivation
@@ -157,6 +157,7 @@
                                                                                                 --sort-keys \
                                                                                                 --rawfile COMPILE_TIME_ARGUMENTS ${ builtins.toFile "compile-time-arguments.json" ( builtins.toJSON check-parameters.compile-time-arguments ) } \
                                                                                                 --rawfile RUN_TIME_ARGUMENTS ${ builtins.toFile "run-time-arguments.json" ( builtins.toJSON check-parameters.run-time-arguments ) } \
+                                                                                                --rawfile STANDARD_INPUT ${ check-parameters.standard-input } \
                                                                                                 '{
                                                                                                     "arguments" :
                                                                                                         {
