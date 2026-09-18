@@ -196,7 +196,7 @@
                                                                         writeShellApplication
                                                                             {
                                                                                 name = "install" ;
-#                                                                                runtimeInputs = [ root-parameters.coreutils root-parameters.jq ( implementation check-parameters.compile-time-arguments ) ] ;
+                                                                                runtimeInputs = [ root-parameters.coreutils root-parameters.jq ( implementation null ) ] ;
                                                                                 text =
                                                                                     if builtins.typeOf check-parameters.standard-input == "null" then
                                                                                         ''
