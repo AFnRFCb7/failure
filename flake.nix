@@ -49,6 +49,7 @@
                                                                     --argjson COMPILE_TIME_ARGUMENTS "$COMPILE_TIME_ARGUMENTS" \
                                                                     --arg STANDARD_INPUT="$STANDARD_INPUT" \
                                                                     '{
+                                                                        "WTF" : 4657981489767621 ,
                                                                         "arguments" :
                                                                             {
                                                                                 "compile" : $COMPILE_TIME_ARGUMENTS ,
@@ -64,6 +65,7 @@
                                                                     --null-input \
                                                                     --argjson COMPILE_TIME_ARGUMENTS "$COMPILE_TIME_ARGUMENTS" \
                                                                     '{
+                                                                        "WTF" : "6917555621733867" ,
                                                                         "arguments" :
                                                                             {
                                                                                 "compile" : $COMPILE_TIME_ARGUMENTS ,
