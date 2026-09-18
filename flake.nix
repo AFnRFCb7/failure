@@ -40,7 +40,7 @@
                                                     runtimeInputs = [ root-parameters.coreutils root-parameters.jq ] ;
                                                     text =
                                                         ''
-                                                            export COMPILE_TIME_ARGUMENTS="$( cat ${ builtins.toFile "compile-time-arguments.json" ( builtins.toJSON implementation-parameters.compile-time-arguments ) } )" || exit ${ root-parameters.error-unplanned }
+                                                            COMPILE_TIME_ARGUMENTS="$( cat ${ builtins.toFile "compile-time-arguments.json" ( builtins.toJSON implementation-parameters.compile-time-arguments ) } )" || exit ${ root-parameters.error-unplanned }
                                                             if [[ -t 0 ]]
                                                             then
                                                                 STANDARD_INPUT="$( cat )" || exit ${ builtins.toString root-parameters.error-unplanned }
