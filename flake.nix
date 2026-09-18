@@ -128,7 +128,7 @@
                                                                                                 --null-input \
                                                                                                 --sort-keys \
                                                                                                 --rawfile COMPILE_TIME_ARGUMENTS ${ builtins.toFile "compile-time-arguments.json" ( builtins.toJSON check-parameters.compile-time-arguments ) } \
-                                                                                                --rawfile RUN_TIME_ARGUMENTS ${ builtins.toFile "run-time-arguments.json" ( builtins.toJSON check-parameters.run-time-arguments ) } \                                                                                                --RUN_TIME_ARGUMENTS
+                                                                                                --rawfile RUN_TIME_ARGUMENTS ${ builtins.toFile "run-time-arguments.json" ( builtins.toJSON check-parameters.run-time-arguments ) } \
                                                                                                 '{
                                                                                                     "arguments" :
                                                                                                         {
