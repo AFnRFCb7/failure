@@ -166,7 +166,7 @@
                                                                                                         } ,
                                                                                                     "inputs" :
                                                                                                         {
-                                                                                                            "standard" :
+                                                                                                            "standard" : $STANDARD_INPUT
                                                                                                         }
                                                                                                 }' > "$OUT/expected/standard-error"
                                                                                             echo -n "" > "$OUT/expected/standard-output"
