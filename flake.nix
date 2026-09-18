@@ -46,7 +46,6 @@
                                                                 STANDARD_INPUT="$( cat )" || exit ${ builtins.toString root-parameters.error-unplanned }
                                                                 jq \
                                                                     --null-input \
-                                                                    --prettyPrint \
                                                                     --argjson COMPILE_TIME_ARGUMENTS "$COMPILE_TIME_ARGUMENTS" \
                                                                     --arg STANDARD_INPUT="$STANDARD_INPUT" \
                                                                     '{
@@ -63,7 +62,6 @@
                                                             else
                                                                 jq \
                                                                     --null-input \
-                                                                    --prettyPrint \
                                                                     --argjson COMPILE_TIME_ARGUMENTS "$COMPILE_TIME_ARGUMENTS" \
                                                                     '{
                                                                         "arguments" :
