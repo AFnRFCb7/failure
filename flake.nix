@@ -182,6 +182,7 @@
                                                                                             else
                                                                                                 echo -n "$?" > "$OUT/observed/status"
                                                                                             fi
+                                                                                            echo "$0" "$OUT" >&2
                                                                                             diff --unified "$OUT/expected" "$OUT/observed"
                                                                                         '' ;
                                                                             }
