@@ -40,7 +40,7 @@
                                                     runtimeInputs = [ root-parameters.coreutils root-parameters.jq ] ;
                                                     text =
                                                         ''
-                                                            export COMPILE_TIME_ARGUMENTS_JSON='${ builtins.toFile "compile-time-arguments.json" ( builtins.toJSON implementation-parameters.compile-time-arguments ) }'
+                                                            export COMPILE_TIME_ARGUMENTS="$( cat ${ builtins.toFile "compile-time-arguments.json" ( builtins.toJSON implementation-parameters.compile-time-arguments ) } )" || exit ${ root-parameters.error-unplanned }
                                                             if [[ -t 0 ]]
                                                             then
                                                                 STANDARD_INPUT="$( cat )" || exit ${ builtins.toString root-parameters.error-unplanned }
@@ -122,7 +122,6 @@
                                                                                 text =
                                                                                     if builtins.typeOf check-parameters.standard-input == "null" then
                                                                                         ''
-                                                                                            echo 1723258852938545 7364275125863717 "$0" >&2
                                                                                             OUT="$1"
                                                                                             COMPILE_TIME_ARGUMENTS="$( cat ${ builtins.toFile "compile-time-arguments.json" ( builtins.toJSON check-parameters.compile-time-arguments ) } )" || exit ${ root-parameters.error-unplanned }
                                                                                             RUN_TIME_ARGUMENTS="$( cat ${ builtins.toFile "run-time-arguments.json" ( builtins.toJSON check-parameters.run-time-arguments ) } )" || exit ${ root-parameters.error-unplanned }
@@ -154,9 +153,7 @@
                                                                                     else
                                                                                         ''
                                                                                             OUT="$1"
-                                                                                            echo 1723258852938545 2962467655196547 "$0" >&2
                                                                                             mkdir --parents "$OUT/expected"
-                                                                                            echo 1723258852938545 8453473237732375 "$0" "$OUT" >&2
                                                                                             COMPILE_TIME_ARGUMENTS="$( cat ${ builtins.toFile "compile-time-arguments.json" ( builtins.toJSON check-parameters.compile-time-arguments ) } )" || exit ${ root-parameters.error-unplanned }
                                                                                             RUN_TIME_ARGUMENTS="$( cat ${ builtins.toFile "run-time-arguments.json" ( builtins.toJSON check-parameters.run-time-arguments ) } )" || exit ${ root-parameters.error-unplanned }
                                                                                             jq \
