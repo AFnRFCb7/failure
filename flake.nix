@@ -122,7 +122,7 @@
                                                                                 text =
                                                                                     if builtins.typeOf check-parameters.standard-input == "null" then
                                                                                         ''
-                                                                                            echo "$0" >&2
+                                                                                            echo 1723258852938545 7364275125863717 "$0" >&2
                                                                                             OUT="$1"
                                                                                             mkdir --parents "$OUT/expected"
                                                                                             jq \
@@ -151,6 +151,7 @@
                                                                                         ''
                                                                                     else
                                                                                         ''
+                                                                                            echo 1723258852938545 2962467655196547 "$0" >&2
                                                                                             OUT="$1"
                                                                                             mkdir --parents "$OUT/expected"
                                                                                             jq \
