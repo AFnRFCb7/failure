@@ -196,7 +196,7 @@
                                                         name = "check-0" ;
                                                         order = 0 ;
                                                         value = dependencies : check-parameters.mkDerivation { installPhase = "touch $out" ; name = "check-0" ; src = ./. ; } ;
-                                                    }
+                                                    } ;
                                     implementation = implementation ;
                                 } ;
             } ;
