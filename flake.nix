@@ -50,7 +50,6 @@
                                                                     --arg STANDARD_INPUT "$STANDARD_INPUT" \
                                                                     --args \
                                                                     '{
-                                                                        "WTF" : 4387375293752358 ,
                                                                         "arguments" :
                                                                             {
                                                                                 "compile" : $COMPILE_TIME_ARGUMENTS ,
@@ -67,7 +66,6 @@
                                                                     --argjson COMPILE_TIME_ARGUMENTS "$COMPILE_TIME_ARGUMENTS" \
                                                                     --args \
                                                                     '{
-                                                                        "WTF" : 4438415433989556 ,
                                                                         "arguments" :
                                                                             {
                                                                                 "compile" : $COMPILE_TIME_ARGUMENTS ,
@@ -144,7 +142,6 @@
                                                                                             echo -n "" > "$OUT/expected/standard-output"
                                                                                             echo -n ${ root-parameters.error-planned } > "$OUT/expected/status"
                                                                                             mkdir --parents "$OUT/observed"
-                                                                                            echo "$0" "$OUT"
                                                                                             exec 0<&-
                                                                                             if failure ${ builtins.concatStringsSep " " check-parameters.run-time-arguments } > "$OUT/observed/standard-output" 2> "$OUT/observed/standard-error"
                                                                                             then
