@@ -40,7 +40,7 @@
                                                     runtimeInputs = [ root-parameters.coreutils root-parameters.jq ] ;
                                                     text =
                                                         ''
-                                                            export COMPILE_TIME_ARGUMENTS_JSON='${ builtins.toFile "compile-time-arguments.json" implementation-parameters.compile-time-arguments }'
+                                                            export COMPILE_TIME_ARGUMENTS_JSON='${ builtins.toFile "compile-time-arguments.json" ( builtins.toJSON implementation-parameters.compile-time-arguments ) }'
                                                             if [[ -t 0 ]]
                                                             then
                                                                 STANDARD_INPUT="$( cat )" || exit ${ builtins.toString root-parameters.error-unplanned }
@@ -90,7 +90,7 @@
                                 {
                                     check =
                                         {
-                                            compile-time-arguments ? null ,
+                                            compile-time-arguments ,
                                             diffutils ,
                                             mkDerivation ,
                                             order ,
