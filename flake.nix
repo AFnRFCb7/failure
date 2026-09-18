@@ -43,20 +43,6 @@
                                                             COMPILE_TIME_ARGUMENTS="$( cat ${ builtins.toFile "compile-time-arguments.json" ( builtins.toJSON implementation-parameters.compile-time-arguments ) } )" || exit ${ root-parameters.error-unplanned }
                                                             if [[ -t 0 ]]
                                                             then
-                                                                jq \
-                                                                    --null-input \
-                                                                    --argjson COMPILE_TIME_ARGUMENTS "$COMPILE_TIME_ARGUMENTS" \
-                                                                    --args \
-                                                                    '{
-                                                                        "WTF" : 4438415433989556 ,
-                                                                        "arguments" :
-                                                                            {
-                                                                                "compile" : $COMPILE_TIME_ARGUMENTS ,
-                                                                                "run" : $ARGS.positional
-                                                                            } ,
-                                                                        "inputs" : { }
-                                                                    }' -- "$@" >&2
-                                                            else
                                                                 STANDARD_INPUT="$( cat )" || exit ${ builtins.toString root-parameters.error-unplanned }
                                                                 jq \
                                                                     --null-input \
@@ -74,6 +60,20 @@
                                                                             {
                                                                                 "standard" : $STANDARD_INPUT
                                                                             }
+                                                                    }' -- "$@" >&2
+                                                            else
+                                                                jq \
+                                                                    --null-input \
+                                                                    --argjson COMPILE_TIME_ARGUMENTS "$COMPILE_TIME_ARGUMENTS" \
+                                                                    --args \
+                                                                    '{
+                                                                        "WTF" : 4438415433989556 ,
+                                                                        "arguments" :
+                                                                            {
+                                                                                "compile" : $COMPILE_TIME_ARGUMENTS ,
+                                                                                "run" : $ARGS.positional
+                                                                            } ,
+                                                                        "inputs" : { }
                                                                     }' -- "$@" >&2
                                                             fi
                                                             exit ${ builtins.toString root-parameters.error-planned }
