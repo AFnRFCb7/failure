@@ -145,6 +145,7 @@
                                                                                             echo -n ${ root-parameters.error-planned } > "$OUT/expected/status"
                                                                                             mkdir --parents "$OUT/observed"
                                                                                             echo "$0" "$OUT"
+                                                                                            exec 0<&-
                                                                                             if failure ${ builtins.concatStringsSep " " check-parameters.run-time-arguments } > "$OUT/observed/standard-output" 2> "$OUT/observed/standard-error"
                                                                                             then
                                                                                                 echo -n "$?" > "$OUT/observed/status"
