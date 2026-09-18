@@ -61,7 +61,7 @@
                                                                 jq \
                                                                     --null-input \
                                                                     --argjson COMPILE_TIME_ARGUMENTS "$COMPILE_TIME_ARGUMENTS" \
-                                                                    --arg STANDARD_INPUT="$STANDARD_INPUT" \
+                                                                    --arg STANDARD_INPUT "$STANDARD_INPUT" \
                                                                     --args \
                                                                     '{
                                                                         "WTF" : 4657981489767621 ,
