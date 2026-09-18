@@ -176,7 +176,7 @@
                                                                                             echo -n "" > "$OUT/expected/standard-output"
                                                                                             echo -n ${ root-parameters.error-planned } > "$OUT/expected/status"
                                                                                             mkdir --parents "$OUT/observed"
-                                                                                            if failure ${ builtins.concatStringsSep " " check-parameters.run-time-arguments } ${ if builtins.typeOf check-parameters.standard-input == "path" then "< ${ check-parameters.standard-input }" else "" } > "$OUT/observed/standard-output" 2> "$OUT/observed/standard-error"
+                                                                                            if failure ${ builtins.concatStringsSep " " check-parameters.run-time-arguments } ${ if builtins.typeOf check-parameters.standard-input == "null" then "" else "< ${ check-parameters.standard-input }" } > "$OUT/observed/standard-output" 2> "$OUT/observed/standard-error"
                                                                                             then
                                                                                                 echo -n "$?" > "$OUT/observed/status"
                                                                                             else
