@@ -108,7 +108,7 @@
                                                                                                         [
                                                                                                             pkgs.coreutils
                                                                                                             pkgs.diffutils
-                                                                                                            jq
+                                                                                                            pkgs.jq
                                                                                                             (
                                                                                                                 config.failure
                                                                                                                     {
