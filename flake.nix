@@ -139,7 +139,7 @@
                                                                                                             "inputs" : { }
                                                                                                         }' > "$OUT/expected/standard-error"
                                                                                                     echo -n "" > "$OUT/expected/standard-output"
-                                                                                                    echo -n ${ builtins.toString status } > "$OUT/expected/status"
+                                                                                                    echo -n ${ builtins.toString planned-error } > "$OUT/expected/status"
                                                                                                     mkdir --parents "$OUT/observed"
                                                                                                     exec 0<&-
                                                                                                     if failure ${ builtins.concatStringsSep " " run-time-arguments } > "$OUT/observed/standard-output" 2> "$OUT/observed/standard-error"
