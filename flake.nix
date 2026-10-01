@@ -75,7 +75,8 @@
                                     check =
                                         {
                                             nixosTest ,
-                                            order
+                                            order ,
+                                            writeShellApplication
                                         } :
                                         {
                                             compile-time-arguments ,
@@ -104,7 +105,7 @@
                                                             testScript =
                                                                 let
                                                                     test-script =
-                                                                        pkgs.writeShellApplication
+                                                                        writeShellApplication
                                                                             {
                                                                                 name = "test-script" ;
                                                                                 runtimeInputs =
