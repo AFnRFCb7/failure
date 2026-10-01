@@ -74,12 +74,8 @@
                                 {
                                     check =
                                         {
-                                            coreutils ,
-                                            diffutils ,
-                                            jq ,
                                             nixosTest ,
-                                            order ,
-                                            writeShellApplication
+                                            order
                                         } :
                                         {
                                             compile-time-arguments ,
@@ -100,70 +96,72 @@
                                                             nodes.client =
                                                                 {
                                                                     client =
-                                                                        { nodes , ... }  :
+                                                                        { config , pkgs , ... }  :
                                                                             {
+                                                                                environment.systemPackages =
+                                                                                    [
+                                                                                        (
+                                                                                            pkgs.writeShellApplication
+                                                                                                {
+                                                                                                    name = "test-script" ;
+                                                                                                    runtimeInputs =
+                                                                                                        [
+                                                                                                            pkgs.coreutils
+                                                                                                            pkgs.diffutils
+                                                                                                            jq
+                                                                                                            (
+                                                                                                                config.failure
+                                                                                                                    {
+                                                                                                                        compile-time-arguments = compile-time-arguments ;
+                                                                                                                        shell-application = shell-application ;
+                                                                                                                        planned-error = planned-error ;
+                                                                                                                        visitor = visitor ;
+                                                                                                                        unplanned-error = unplanned-error ;
+                                                                                                                    }
+                                                                                                            )
+                                                                                                        ] ;
+                                                                                                    text =
+                                                                                                        ''
+                                                                                                            OUT=/build/test
+                                                                                                            COMPILE_TIME_ARGUMENTS="$( cat ${ builtins.toFile "compile-time-arguments.json" ( builtins.toJSON compile-time-arguments ) } )" || exit ${ builtins.toString error-unplanned }
+                                                                                                            RUN_TIME_ARGUMENTS="$( cat ${ builtins.toFile "run-time-arguments.json" ( builtins.toJSON check-parameters.run-time-arguments ) } )" || exit ${ builtins.toString error-unplanned }
+                                                                                                            mkdir --parents "$OUT/expected"
+                                                                                                            jq \
+                                                                                                                --null-input \
+                                                                                                                --sort-keys \
+                                                                                                                --argjson COMPILE_TIME_ARGUMENTS "$COMPILE_TIME_ARGUMENTS" \
+                                                                                                                --argjson RUN_TIME_ARGUMENTS "$RUN_TIME_ARGUMENTS" \
+                                                                                                                '{
+                                                                                                                    "arguments" :
+                                                                                                                        {
+                                                                                                                            "compile" : $COMPILE_TIME_ARGUMENTS ,
+                                                                                                                            "run" : $RUN_TIME_ARGUMENTS
+                                                                                                                        } ,
+                                                                                                                    "inputs" : { }
+                                                                                                                }' > "$OUT/expected/standard-error"
+                                                                                                            echo -n "" > "$OUT/expected/standard-output"
+                                                                                                            echo -n ${ builtins.toString } > "$OUT/expected/status"
+                                                                                                            mkdir --parents "$OUT/observed"
+                                                                                                            exec 0<&-
+                                                                                                            if failure ${ builtins.concatStringsSep " " check-parameters.run-time-arguments } > "$OUT/observed/standard-output" 2> "$OUT/observed/standard-error"
+                                                                                                            then
+                                                                                                                echo -n "$?" > "$OUT/observed/status"
+                                                                                                            else
+                                                                                                                echo -n "$?" > "$OUT/observed/status"
+                                                                                                            fi
+                                                                                                            diff --unified "$OUT/expected" "$OUT/observed"
+                                                                                                        '' ;
+                                                                                                }
+                                                                                        )
+                                                                                    ] ;
                                                                                 imports = [ implementation ] ;
                                                                             } ;
                                                                 } ;
                                                             testScript =
-                                                                let
-                                                                    test-script =
-                                                                        writeShellApplication
-                                                                            {
-                                                                                name = "test-script" ;
-                                                                                runtimeInputs =
-                                                                                    [
-                                                                                        coreutils
-                                                                                        diffutils
-                                                                                        jq
-                                                                                        (
-                                                                                            config.failure
-                                                                                                {
-                                                                                                    compile-time-arguments = compile-time-arguments ;
-                                                                                                    shell-application = shell-application ;
-                                                                                                    planned-error = planned-error ;
-                                                                                                    visitor = visitor ;
-                                                                                                    unplanned-error = unplanned-error ;
-                                                                                                }
-                                                                                        )
-                                                                                    ] ;
-                                                                                text =
-                                                                                    ''
-                                                                                        OUT=/build/test
-                                                                                        COMPILE_TIME_ARGUMENTS="$( cat ${ builtins.toFile "compile-time-arguments.json" ( builtins.toJSON compile-time-arguments ) } )" || exit ${ builtins.toString error-unplanned }
-                                                                                        RUN_TIME_ARGUMENTS="$( cat ${ builtins.toFile "run-time-arguments.json" ( builtins.toJSON check-parameters.run-time-arguments ) } )" || exit ${ builtins.toString error-unplanned }
-                                                                                        mkdir --parents "$OUT/expected"
-                                                                                        jq \
-                                                                                            --null-input \
-                                                                                            --sort-keys \
-                                                                                            --argjson COMPILE_TIME_ARGUMENTS "$COMPILE_TIME_ARGUMENTS" \
-                                                                                            --argjson RUN_TIME_ARGUMENTS "$RUN_TIME_ARGUMENTS" \
-                                                                                            '{
-                                                                                                "arguments" :
-                                                                                                    {
-                                                                                                        "compile" : $COMPILE_TIME_ARGUMENTS ,
-                                                                                                        "run" : $RUN_TIME_ARGUMENTS
-                                                                                                    } ,
-                                                                                                "inputs" : { }
-                                                                                            }' > "$OUT/expected/standard-error"
-                                                                                        echo -n "" > "$OUT/expected/standard-output"
-                                                                                        echo -n ${ builtins.toString } > "$OUT/expected/status"
-                                                                                        mkdir --parents "$OUT/observed"
-                                                                                        exec 0<&-
-                                                                                        if failure ${ builtins.concatStringsSep " " check-parameters.run-time-arguments } > "$OUT/observed/standard-output" 2> "$OUT/observed/standard-error"
-                                                                                        then
-                                                                                            echo -n "$?" > "$OUT/observed/status"
-                                                                                        else
-                                                                                            echo -n "$?" > "$OUT/observed/status"
-                                                                                        fi
-                                                                                        diff --unified "$OUT/expected" "$OUT/observed"
-                                                                                    '' ;
-                                                                            } ;
-                                                                        in
-                                                                            ''
-                                                                                client.wait_for("network-online.target")
-                                                                                client.success("${ test-script }/bin/test-script")
-                                                                            '' ;
+                                                                ''
+                                                                    client.wait_for("network-online.target")
+                                                                    client.success("${ test-script }/bin/test-script")
+                                                                '' ;
                                                         } ;
                                                 in
                                                     {
