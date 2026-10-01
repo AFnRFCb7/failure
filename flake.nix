@@ -74,6 +74,9 @@
                                 {
                                     check =
                                         {
+                                            coreutils ,
+                                            diffutils ,
+                                            jq ,
                                             nixosTest ,
                                             order ,
                                             writeShellApplication
@@ -110,9 +113,9 @@
                                                                                 name = "test-script" ;
                                                                                 runtimeInputs =
                                                                                     [
-                                                                                        pkgs.coreutils
-                                                                                        pkgs.diffutils
-                                                                                        pkgs.jq
+                                                                                        coreutils
+                                                                                        diffutils
+                                                                                        jq
                                                                                         (
                                                                                             config.failure
                                                                                                 {
