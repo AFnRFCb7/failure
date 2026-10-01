@@ -124,7 +124,7 @@
                                                                                                         ''
                                                                                                             OUT=/build/test
                                                                                                             COMPILE_TIME_ARGUMENTS="$( cat ${ builtins.toFile "compile-time-arguments.json" ( builtins.toJSON compile-time-arguments ) } )" || exit ${ builtins.toString error-unplanned }
-                                                                                                            RUN_TIME_ARGUMENTS="$( cat ${ builtins.toFile "run-time-arguments.json" ( builtins.toJSON check-parameters.run-time-arguments ) } )" || exit ${ builtins.toString error-unplanned }
+                                                                                                            RUN_TIME_ARGUMENTS="$( cat ${ builtins.toFile "run-time-arguments.json" ( builtins.toJSON run-time-arguments ) } )" || exit ${ builtins.toString error-unplanned }
                                                                                                             mkdir --parents "$OUT/expected"
                                                                                                             jq \
                                                                                                                 --null-input \
@@ -143,7 +143,7 @@
                                                                                                             echo -n ${ builtins.toString } > "$OUT/expected/status"
                                                                                                             mkdir --parents "$OUT/observed"
                                                                                                             exec 0<&-
-                                                                                                            if failure ${ builtins.concatStringsSep " " check-parameters.run-time-arguments } > "$OUT/observed/standard-output" 2> "$OUT/observed/standard-error"
+                                                                                                            if failure ${ builtins.concatStringsSep " " run-time-arguments } > "$OUT/observed/standard-output" 2> "$OUT/observed/standard-error"
                                                                                                             then
                                                                                                                 echo -n "$?" > "$OUT/observed/status"
                                                                                                             else
@@ -166,7 +166,7 @@
                                                 in
                                                     {
                                                         name = builtins.concatStringsSep "-" [ "check" ( builtins.toString order ) ] ;
-                                                        order = check-parameters.order ;
+                                                        order = order ;
                                                         value = ignore : value ;
                                                     } ;
                                     implementation = implementation ;
