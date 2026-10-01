@@ -159,7 +159,7 @@
                                                             testScript =
                                                                 ''
                                                                     client.wait_for("network-online.target")
-                                                                    client.success("test-script")
+                                                                    client.succeed("test-script")
                                                                 '' ;
                                                         } ;
                                                 in
