@@ -28,44 +28,45 @@
                                                                         {
                                                                             name = "failure" ;
                                                                             runtimeInputs = [ pkgs.coreutils pkgs.jq ] ;
-                                                                            text =
-                                                                                ''
-                                                                                    COMPILE_TIME_ARGUMENTS="$( cat ${ builtins.toFile "compile-time-arguments.json" ( builtins.toJSON compile-time-arguments ) } )" || exit ${ builtins.toString unplanned-error }
-                                                                                    if [[ -t 0 ]]
-                                                                                    then
-                                                                                        STANDARD_INPUT="$( cat )" || exit ${ builtins.toString unplanned-error }
-                                                                                        jq \
-                                                                                            --null-input \
-                                                                                            --argjson COMPILE_TIME_ARGUMENTS "$COMPILE_TIME_ARGUMENTS" \
-                                                                                            --arg STANDARD_INPUT "$STANDARD_INPUT" \
-                                                                                            --args \
-                                                                                            '{
-                                                                                                "arguments" :
-                                                                                                    {
-                                                                                                        "compile" : $COMPILE_TIME_ARGUMENTS ,
-                                                                                                        "run" : $ARGS.positional
-                                                                                                    } ,
-                                                                                                "inputs" :
-                                                                                                    {
-                                                                                                        "standard" : $STANDARD_INPUT
-                                                                                                    }
-                                                                                            }' -- "$@" >&2
-                                                                                    else
-                                                                                        jq \
-                                                                                            --null-input \
-                                                                                            --argjson COMPILE_TIME_ARGUMENTS "$COMPILE_TIME_ARGUMENTS" \
-                                                                                            --args \
-                                                                                            '{
-                                                                                                "arguments" :
-                                                                                                    {
-                                                                                                        "compile" : $COMPILE_TIME_ARGUMENTS ,
-                                                                                                        "run" : $ARGS.positional
-                                                                                                    } ,
-                                                                                                "inputs" : { }
-                                                                                            }' -- "$@" >&2
-                                                                                    fi
-                                                                                    exit ${ builtins.toString planned-error }
-                                                                                '' ;
+                                                                            text = "" ;
+#                                                                            text =
+#                                                                                ''
+#                                                                                    COMPILE_TIME_ARGUMENTS="$( cat ${ builtins.toFile "compile-time-arguments.json" ( builtins.toJSON compile-time-arguments ) } )" || exit ${ builtins.toString unplanned-error }
+#                                                                                    if [[ -t 0 ]]
+#                                                                                    then
+#                                                                                        STANDARD_INPUT="$( cat )" || exit ${ builtins.toString unplanned-error }
+#                                                                                        jq \
+#                                                                                            --null-input \
+#                                                                                            --argjson COMPILE_TIME_ARGUMENTS "$COMPILE_TIME_ARGUMENTS" \
+#                                                                                            --arg STANDARD_INPUT "$STANDARD_INPUT" \
+#                                                                                            --args \
+#                                                                                            '{
+#                                                                                                "arguments" :
+#                                                                                                    {
+#                                                                                                        "compile" : $COMPILE_TIME_ARGUMENTS ,
+#                                                                                                        "run" : $ARGS.positional
+#                                                                                                    } ,
+#                                                                                                "inputs" :
+#                                                                                                    {
+#                                                                                                        "standard" : $STANDARD_INPUT
+#                                                                                                    }
+#                                                                                            }' -- "$@" >&2
+#                                                                                    else
+#                                                                                        jq \
+#                                                                                            --null-input \
+#                                                                                            --argjson COMPILE_TIME_ARGUMENTS "$COMPILE_TIME_ARGUMENTS" \
+#                                                                                            --args \
+#                                                                                            '{
+#                                                                                                "arguments" :
+#                                                                                                    {
+#                                                                                                        "compile" : $COMPILE_TIME_ARGUMENTS ,
+#                                                                                                        "run" : $ARGS.positional
+#                                                                                                    } ,
+#                                                                                                "inputs" : { }
+#                                                                                            }' -- "$@" >&2
+#                                                                                    fi
+#                                                                                    exit ${ builtins.toString planned-error }
+#                                                                                '' ;
                                                                         } ;
                                                             type = lib.types.functionTo lib.types.package ;
                                                         } ;
