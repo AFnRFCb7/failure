@@ -158,7 +158,7 @@
                                                                     } ;
                                                             testScript =
                                                                 ''
-                                                                    client.wait_for("network-online.target")
+                                                                    client.wait_for_unit("network-online.target")
                                                                     client.succeed("test-script")
                                                                 '' ;
                                                         } ;
