@@ -75,8 +75,8 @@
                                 {
                                     check =
                                         {
-                                            dependencies ,
-                                            nixosTest
+                                            nixosTest ,
+                                            obviated-by
                                         } :
                                         {
                                             compile-time-arguments ,
@@ -163,7 +163,7 @@
                                                         } ;
                                                 in
                                                     {
-                                                        dependencies = dependencies ;
+                                                        obviated-by = obviated-by ;
                                                         test = value ;
                                                         type = "failure" ;
                                                     } ;
