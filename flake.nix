@@ -75,8 +75,8 @@
                                 {
                                     check =
                                         {
-                                            nixosTest ,
-                                            order
+                                            dependencies ,
+                                            nixosTest
                                         } :
                                         {
                                             compile-time-arguments ,
@@ -163,9 +163,9 @@
                                                         } ;
                                                 in
                                                     {
-                                                        name = builtins.concatStringsSep "-" [ "check" ( builtins.toString order ) ] ;
-                                                        order = order ;
-                                                        value = value ;
+                                                        dependencies = dependencies ;
+                                                        test = value ;
+                                                        type = "failure" ;
                                                     } ;
                                     implementation = implementation ;
                                 } ;
