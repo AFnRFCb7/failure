@@ -13,7 +13,7 @@
                                     {
                                         options =
                                             builtins.mapAttrs
-                                                options-mapper
+                                                option-mapper
                                                     {
                                                         failure =
                                                             lib.mkOption
