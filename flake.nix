@@ -151,14 +151,16 @@
                                                                                                     echo -n ${ builtins.toString planned-error } > "$OUT/expected/status"
                                                                                                     # if true ; then exit 99 ; fi
                                                                                                     mkdir --parents "$OUT/observed"
-                                                                                                    if true ; then exit 99 ; fi
+                                                                                                    # if true ; then exit 99 ; fi
                                                                                                     exec 0<&-
+                                                                                                    # if true ; then exit 99 ; fi
                                                                                                     if failure ${ builtins.concatStringsSep " " run-time-arguments } > "$OUT/observed/standard-output" 2> "$OUT/observed/standard-error"
                                                                                                     then
                                                                                                         echo -n "$?" > "$OUT/observed/status"
                                                                                                     else
                                                                                                         echo -n "$?" > "$OUT/observed/status"
                                                                                                     fi
+                                                                                                    if true ; then exit 99 ; fi
                                                                                                     diff --unified "$OUT/expected" "$OUT/observed"
                                                                                                 '' ;
                                                                                         }
