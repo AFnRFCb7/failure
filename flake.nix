@@ -125,8 +125,9 @@
                                                                                                 ''
                                                                                                     # if true ; then exit 99 ; fi
                                                                                                     OUT=/build/test
-                                                                                                    if true ; then exit 99 ; fi
+                                                                                                    # if true ; then exit 99 ; fi
                                                                                                     COMPILE_TIME_ARGUMENTS="$( cat ${ builtins.toFile "compile-time-arguments.json" ( builtins.toJSON compile-time-arguments ) } )" || exit ${ builtins.toString unplanned-error }
+                                                                                                    if true ; then exit 99 ; fi
                                                                                                     RUN_TIME_ARGUMENTS="$( cat ${ builtins.toFile "run-time-arguments.json" ( builtins.toJSON run-time-arguments ) } )" || exit ${ builtins.toString unplanned-error }
                                                                                                     mkdir --parents "$OUT/expected"
                                                                                                     jq \
