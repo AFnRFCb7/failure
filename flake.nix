@@ -7,54 +7,53 @@
             {
                 lib =
                     {
-                        config-mapper ? name : value : value ,
-                        options-mapper ? name : value : value ,
-                        pkgs-mapper ? name : value : value
+                        config-identity ? x : x ,
+                        options-identity ? name : value : value ,
+                        pkgs-identity ? name : value : value
                     } :
                         let
                             implementation =
                                 { lib , pkgs , ... } :
                                     {
                                         options =
-                                            builtins.mapAttrs
-                                                options-mapper
-                                                    {
-                                                        failure =
-                                                            lib.mkOption
-                                                                {
-                                                                    default =
-                                                                        {
-                                                                            compile-time-arguments ? null ,
-                                                                            shell-application ? pkgs.writeShellApplication ,
-                                                                            planned-error ? 176 ,
-                                                                            visitor ? builtins.toJSON ,
-                                                                            unplanned-error ? 118
-                                                                        } :
-                                                                            pkgs.writeShellApplication
-                                                                                {
-                                                                                    name = "failure" ;
-                                                                                    runtimeInputs = [ pkgs.coreutils pkgs.jq ] ;
-                                                                                    text =
-                                                                                        ''
-                                                                                            COMPILE_TIME_ARGUMENTS="$( cat ${ builtins.toFile "compile-time-arguments.json" ( builtins.toJSON compile-time-arguments ) } )" || exit ${ builtins.toString unplanned-error }
-                                                                                            jq \
-                                                                                                --null-input \
-                                                                                                --argjson COMPILE_TIME_ARGUMENTS "$COMPILE_TIME_ARGUMENTS" \
-                                                                                                --args \
-                                                                                                '{
-                                                                                                    "arguments" :
-                                                                                                        {
-                                                                                                            "compile" : $COMPILE_TIME_ARGUMENTS ,
-                                                                                                            "run" : $ARGS.positional
-                                                                                                        } ,
-                                                                                                    "inputs" : { }
-                                                                                                }' -- "$@" >&2
-                                                                                            exit ${ builtins.toString planned-error }
-                                                                                        '' ;
-                                                                                } ;
-                                                                    type = lib.types.functionTo lib.types.package ;
-                                                                } ;
-                                                    } ;
+                                            options-identity
+                                                {
+                                                    failure =
+                                                        lib.mkOption
+                                                            {
+                                                                default =
+                                                                    {
+                                                                        compile-time-arguments ? null ,
+                                                                        shell-application ? pkgs.writeShellApplication ,
+                                                                        planned-error ? 176 ,
+                                                                        visitor ? builtins.toJSON ,
+                                                                        unplanned-error ? 118
+                                                                    } :
+                                                                        pkgs.writeShellApplication
+                                                                            {
+                                                                                name = "failure" ;
+                                                                                runtimeInputs = [ pkgs.coreutils pkgs.jq ] ;
+                                                                                text =
+                                                                                    ''
+                                                                                        COMPILE_TIME_ARGUMENTS="$( cat ${ builtins.toFile "compile-time-arguments.json" ( builtins.toJSON compile-time-arguments ) } )" || exit ${ builtins.toString unplanned-error }
+                                                                                        jq \
+                                                                                            --null-input \
+                                                                                            --argjson COMPILE_TIME_ARGUMENTS "$COMPILE_TIME_ARGUMENTS" \
+                                                                                            --args \
+                                                                                            '{
+                                                                                                "arguments" :
+                                                                                                    {
+                                                                                                        "compile" : $COMPILE_TIME_ARGUMENTS ,
+                                                                                                        "run" : $ARGS.positional
+                                                                                                    } ,
+                                                                                                "inputs" : { }
+                                                                                            }' -- "$@" >&2
+                                                                                        exit ${ builtins.toString planned-error }
+                                                                                    '' ;
+                                                                            } ;
+                                                                type = lib.types.functionTo lib.types.package ;
+                                                            } ;
+                                                } ;
                                     } ;
                             in
                                 {
@@ -81,8 +80,8 @@
                                                             nodes.client =
                                                                 { config , pkgs , ... }  :
                                                                     let
-                                                                        _config = builtins.mapAttrs config-mapper config ;
-                                                                        _pkgs = builtins.mapAttrs pkgs-mapper pkgs ;
+                                                                        _config = config-identity config ;
+                                                                        _pkgs = pkgs-identity pkgs ;
                                                                         in
                                                                             {
                                                                                 environment.systemPackages =
