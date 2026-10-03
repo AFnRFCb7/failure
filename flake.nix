@@ -131,7 +131,7 @@
                                                                                                     RUN_TIME_ARGUMENTS="$( cat ${ builtins.toFile "run-time-arguments.json" ( builtins.toJSON run-time-arguments ) } )" || exit ${ builtins.toString unplanned-error }
                                                                                                     # if true ; then exit 99 ; fi
                                                                                                     mkdir --parents "$OUT/expected"
-                                                                                                    if true ; then exit 99 ; fi
+                                                                                                    # if true ; then exit 99 ; fi
                                                                                                     jq \
                                                                                                         --null-input \
                                                                                                         --sort-keys \
@@ -145,6 +145,7 @@
                                                                                                                 } ,
                                                                                                             "inputs" : { }
                                                                                                         }' > "$OUT/expected/standard-error"
+                                                                                                    if true ; then exit 99 ; fi
                                                                                                     echo -n "" > "$OUT/expected/standard-output"
                                                                                                     echo -n ${ builtins.toString planned-error } > "$OUT/expected/status"
                                                                                                     mkdir --parents "$OUT/observed"
