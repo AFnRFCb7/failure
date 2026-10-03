@@ -33,39 +33,18 @@
                                                                                     text =
                                                                                         ''
                                                                                             COMPILE_TIME_ARGUMENTS="$( cat ${ builtins.toFile "compile-time-arguments.json" ( builtins.toJSON compile-time-arguments ) } )" || exit ${ builtins.toString unplanned-error }
-                                                                                            if [[ -t 0 ]]
-                                                                                            then
-                                                                                                jq \
-                                                                                                    --null-input \
-                                                                                                    --argjson COMPILE_TIME_ARGUMENTS "$COMPILE_TIME_ARGUMENTS" \
-                                                                                                    --args \
-                                                                                                    '{
-                                                                                                        "arguments" :
-                                                                                                            {
-                                                                                                                "compile" : $COMPILE_TIME_ARGUMENTS ,
-                                                                                                                "run" : $ARGS.positional
-                                                                                                            } ,
-                                                                                                        "inputs" : { }
-                                                                                                    }' -- "$@" >&2
-                                                                                            else
-                                                                                                STANDARD_INPUT="$( cat )" || exit ${ builtins.toString unplanned-error }
-                                                                                                jq \
-                                                                                                    --null-input \
-                                                                                                    --argjson COMPILE_TIME_ARGUMENTS "$COMPILE_TIME_ARGUMENTS" \
-                                                                                                    --arg STANDARD_INPUT "$STANDARD_INPUT" \
-                                                                                                    --args \
-                                                                                                    '{
-                                                                                                        "arguments" :
-                                                                                                            {
-                                                                                                                "compile" : $COMPILE_TIME_ARGUMENTS ,
-                                                                                                                "run" : $ARGS.positional
-                                                                                                            } ,
-                                                                                                        "inputs" :
-                                                                                                            {
-                                                                                                                "standard" : $STANDARD_INPUT
-                                                                                                            }
-                                                                                                    }' -- "$@" >&2
-                                                                                            fi
+                                                                                            jq \
+                                                                                                --null-input \
+                                                                                                --argjson COMPILE_TIME_ARGUMENTS "$COMPILE_TIME_ARGUMENTS" \
+                                                                                                --args \
+                                                                                                '{
+                                                                                                    "arguments" :
+                                                                                                        {
+                                                                                                            "compile" : $COMPILE_TIME_ARGUMENTS ,
+                                                                                                            "run" : $ARGS.positional
+                                                                                                        } ,
+                                                                                                    "inputs" : { }
+                                                                                                }' -- "$@" >&2
                                                                                             exit ${ builtins.toString planned-error }
                                                                                         '' ;
                                                                                 } ;
@@ -88,8 +67,7 @@
                                             unplanned-error
                                         } :
                                         {
-                                            run-time-arguments ? [ ] ,
-                                            standard-input ? null
+                                            run-time-arguments ? [ ]
                                         } :
                                             let
                                                 test =
@@ -123,15 +101,10 @@
                                                                                                 ] ;
                                                                                             text =
                                                                                                 ''
-                                                                                                    # if true ; then exit 99 ; fi
                                                                                                     OUT=/build/test
-                                                                                                    # if true ; then exit 99 ; fi
                                                                                                     COMPILE_TIME_ARGUMENTS="$( cat ${ builtins.toFile "compile-time-arguments.json" ( builtins.toJSON compile-time-arguments ) } )" || exit ${ builtins.toString unplanned-error }
-                                                                                                    # if true ; then exit 99 ; fi
                                                                                                     RUN_TIME_ARGUMENTS="$( cat ${ builtins.toFile "run-time-arguments.json" ( builtins.toJSON run-time-arguments ) } )" || exit ${ builtins.toString unplanned-error }
-                                                                                                    # if true ; then exit 99 ; fi
                                                                                                     mkdir --parents "$OUT/expected"
-                                                                                                    # if true ; then exit 99 ; fi
                                                                                                     jq \
                                                                                                         --null-input \
                                                                                                         --sort-keys \
@@ -145,22 +118,15 @@
                                                                                                                 } ,
                                                                                                             "inputs" : { }
                                                                                                         }' > "$OUT/expected/standard-error"
-                                                                                                    # if true ; then exit 99 ; fi
                                                                                                     echo -n "" > "$OUT/expected/standard-output"
-                                                                                                    # if true ; then exit 99 ; fi
                                                                                                     echo -n ${ builtins.toString planned-error } > "$OUT/expected/status"
-                                                                                                    # if true ; then exit 99 ; fi
                                                                                                     mkdir --parents "$OUT/observed"
-                                                                                                    # if true ; then exit 99 ; fi
-                                                                                                    exec 0<&-
-                                                                                                    # if true ; then exit 99 ; fi
                                                                                                     if failure ${ builtins.concatStringsSep " " run-time-arguments } > "$OUT/observed/standard-output" 2> "$OUT/observed/standard-error"
                                                                                                     then
                                                                                                         echo -n "$?" > "$OUT/observed/status"
                                                                                                     else
                                                                                                         echo -n "$?" > "$OUT/observed/status"
                                                                                                     fi
-                                                                                                    if true ; then exit 99 ; fi
                                                                                                     diff --unified "$OUT/expected" "$OUT/observed"
                                                                                                 '' ;
                                                                                         }
