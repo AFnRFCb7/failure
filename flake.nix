@@ -24,7 +24,7 @@
                                                     options-identity
                                                         {
                                                             failure =
-                                                                lib.mkOption
+                                                                _lib.mkOption
                                                                     {
                                                                         default =
                                                                             {
@@ -56,7 +56,7 @@
                                                                                                 exit ${ builtins.toString planned-error }
                                                                                             '' ;
                                                                                     } ;
-                                                                        type = _lib.types.functionTo lib.types.package ;
+                                                                        type = _lib.types.functionTo _lib.types.package ;
                                                                     } ;
                                                         } ;
                                             } ;
