@@ -6,14 +6,14 @@
         { self } :
             {
                 lib =
-                    { option-mapper ? name : value : value } :
+                    { options-mapper ? name : value : value } :
                         let
                             implementation =
                                 { lib , pkgs , ... } :
                                     {
                                         options =
                                             builtins.mapAttrs
-                                                option-mapper
+                                                options-mapper
                                                     {
                                                         failure =
                                                             lib.mkOption
