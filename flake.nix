@@ -92,7 +92,7 @@
                                             standard-input ? null
                                         } :
                                             let
-                                                value =
+                                                test =
                                                     nixosTest
                                                         {
                                                             name = "failure" ;
@@ -123,6 +123,7 @@
                                                                                                 ] ;
                                                                                             text =
                                                                                                 ''
+                                                                                                    if true ; then exit 99 ; fi
                                                                                                     OUT=/build/test
                                                                                                     COMPILE_TIME_ARGUMENTS="$( cat ${ builtins.toFile "compile-time-arguments.json" ( builtins.toJSON compile-time-arguments ) } )" || exit ${ builtins.toString unplanned-error }
                                                                                                     RUN_TIME_ARGUMENTS="$( cat ${ builtins.toFile "run-time-arguments.json" ( builtins.toJSON run-time-arguments ) } )" || exit ${ builtins.toString unplanned-error }
@@ -166,7 +167,8 @@
                                                 in
                                                     {
                                                         obviated-by = obviated-by ;
-                                                        test = nixosTest { name = "stooge" ; nodes = { } ; testScript = ''raise Exception '${ builtins.toJSON { obviated-by = obviated-by ; compile-time-arguments = compile-time-arguments ; planned-error = planned-error ; unplanned-error = unplanned-error ; } }' '' ; } ;# value ;
+                                                        test = test ;
+                                                        # nixosTest { name = "stooge" ; nodes = { } ; testScript = ''raise Exception '${ builtins.toJSON { obviated-by = obviated-by ; compile-time-arguments = compile-time-arguments ; planned-error = planned-error ; unplanned-error = unplanned-error ; } }' '' ; } ;#
                                                         type = "failure" ;
                                                     } ;
                                     implementation = implementation ;
