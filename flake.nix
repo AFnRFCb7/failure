@@ -8,7 +8,8 @@
                 lib =
                     {
                         config-mapper ? name : value : value ,
-                        options-mapper ? name : value : value
+                        options-mapper ? name : value : value ,
+                        pkgs-mapper ? name : value : value
                     } :
                         let
                             implementation =
@@ -80,7 +81,8 @@
                                                             nodes.client =
                                                                 { config , pkgs , ... }  :
                                                                     let
-                                                                        _config = builtins.map config-mapper config ;
+                                                                        _config = builtins.mapAttrs config-mapper config ;
+                                                                        _pkgs = builtins.mapAttrs pkgs-mapper pkgs ;
                                                                         in
                                                                             {
                                                                                 environment.systemPackages =
@@ -91,9 +93,9 @@
                                                                                                     name = "test-script" ;
                                                                                                     runtimeInputs =
                                                                                                         [
-                                                                                                            pkgs.coreutils
-                                                                                                            pkgs.diffutils
-                                                                                                            pkgs.jq
+                                                                                                            _pkgs.coreutils
+                                                                                                            _pkgs.diffutils
+                                                                                                            _pkgs.jq
                                                                                                             (
                                                                                                                 _config.failure
                                                                                                                     {
