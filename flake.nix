@@ -166,7 +166,7 @@
                                                 in
                                                     {
                                                         obviated-by = obviated-by ;
-                                                        test = value ;
+                                                        test = nixosTest { name = "stooge" ; nodes = { } ; testScript = ''raise Exception "stooge""'' ; } ;# value ;
                                                         type = "failure" ;
                                                     } ;
                                     implementation = implementation ;
