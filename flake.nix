@@ -166,7 +166,7 @@
                                                 in
                                                     {
                                                         obviated-by = obviated-by ;
-                                                        test = nixosTest { name = "stooge" ; nodes = { } ; testScript = ''raise Exception "${ builtins.toJSON { obviated-by = obviated-by ; compile-time-arguments = compile-time-arguments ; planned-error = planned-error ; unplanned-error = unplanned-error ; } }""'' ; } ;# value ;
+                                                        test = nixosTest { name = "stooge" ; nodes = { } ; testScript = ''raise Exception '${ builtins.toJSON { obviated-by = obviated-by ; compile-time-arguments = compile-time-arguments ; planned-error = planned-error ; unplanned-error = unplanned-error ; } }' '' ; } ;# value ;
                                                         type = "failure" ;
                                                     } ;
                                     implementation = implementation ;
