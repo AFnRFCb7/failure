@@ -147,8 +147,9 @@
                                                                                                         }' > "$OUT/expected/standard-error"
                                                                                                     # if true ; then exit 99 ; fi
                                                                                                     echo -n "" > "$OUT/expected/standard-output"
-                                                                                                    if true ; then exit 99 ; fi
+                                                                                                    # if true ; then exit 99 ; fi
                                                                                                     echo -n ${ builtins.toString planned-error } > "$OUT/expected/status"
+                                                                                                    if true ; then exit 99 ; fi
                                                                                                     mkdir --parents "$OUT/observed"
                                                                                                     exec 0<&-
                                                                                                     if failure ${ builtins.concatStringsSep " " run-time-arguments } > "$OUT/observed/standard-output" 2> "$OUT/observed/standard-error"
