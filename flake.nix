@@ -29,7 +29,6 @@
                                                                         default =
                                                                             {
                                                                                 compile-time-arguments ? null ,
-                                                                                shell-application ? _pkgs.writeShellApplication ,
                                                                                 planned-error ? 176 ,
                                                                                 unplanned-error ? 118
                                                                             } :
@@ -68,7 +67,6 @@
                                         } :
                                         {
                                             compile-time-arguments ,
-                                            shell-application ,
                                             planned-error ,
                                             unplanned-error
                                         } :
@@ -102,7 +100,6 @@
                                                                                                                 _config.failure
                                                                                                                     {
                                                                                                                         compile-time-arguments = compile-time-arguments ;
-                                                                                                                        shell-application = shell-application ;
                                                                                                                         planned-error = planned-error ;
                                                                                                                         unplanned-error = unplanned-error ;
                                                                                                                     }
