@@ -31,7 +31,6 @@
                                                                                 compile-time-arguments ? null ,
                                                                                 shell-application ? _pkgs.writeShellApplication ,
                                                                                 planned-error ? 176 ,
-                                                                                visitor ? builtins.toJSON ,
                                                                                 unplanned-error ? 118
                                                                             } :
                                                                                 pkgs.writeShellApplication
@@ -71,7 +70,6 @@
                                             compile-time-arguments ,
                                             shell-application ,
                                             planned-error ,
-                                            visitor ,
                                             unplanned-error
                                         } :
                                         {
@@ -106,7 +104,6 @@
                                                                                                                         compile-time-arguments = compile-time-arguments ;
                                                                                                                         shell-application = shell-application ;
                                                                                                                         planned-error = planned-error ;
-                                                                                                                        visitor = visitor ;
                                                                                                                         unplanned-error = unplanned-error ;
                                                                                                                     }
                                                                                                             )
@@ -156,7 +153,6 @@
                                                     {
                                                         obviated-by = obviated-by ;
                                                         test = test ;
-                                                        # nixosTest { name = "stooge" ; nodes = { } ; testScript = ''raise Exception '${ builtins.toJSON { obviated-by = obviated-by ; compile-time-arguments = compile-time-arguments ; planned-error = planned-error ; unplanned-error = unplanned-error ; } }' '' ; } ;#
                                                         type = "failure" ;
                                                     } ;
                                     implementation = implementation ;
