@@ -31,7 +31,6 @@
                                                                                 compile-time-arguments ? null ,
                                                                                 shell-application ? _pkgs.writeShellApplication ,
                                                                                 planned-error ? 176 ,
-                                                                                visitor ? builtins.toJSON ,
                                                                                 unplanned-error ? 118
                                                                             } :
                                                                                 pkgs.writeShellApplication
