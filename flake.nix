@@ -71,7 +71,6 @@
                                             compile-time-arguments ,
                                             shell-application ,
                                             planned-error ,
-                                            visitor ,
                                             unplanned-error
                                         } :
                                         {
@@ -106,7 +105,6 @@
                                                                                                                         compile-time-arguments = compile-time-arguments ;
                                                                                                                         shell-application = shell-application ;
                                                                                                                         planned-error = planned-error ;
-                                                                                                                        visitor = null ;
                                                                                                                         unplanned-error = unplanned-error ;
                                                                                                                     }
                                                                                                             )
