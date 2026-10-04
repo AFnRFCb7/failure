@@ -71,7 +71,19 @@
                                             compile-time-arguments ,
                                             shell-application ,
                                             planned-error ,
-                                            visitor ,
+                                            visitor ?
+                                                { lib , ... } :
+                                                    let
+                                                        _lib = lib-identity lib ;
+                                                        in
+                                                            {
+                                                                visitor =
+                                                                    _lib.options.visitor.mkOption
+                                                                        {
+                                                                            default = { ... } : { ... } : builtins.toJSON ;
+                                                                            type = _lib.types.functionTo ( _lib.types.functionTo _lib.types.anything ) ;
+                                                                        } ;
+                                                            } ,
                                             unplanned-error
                                         } :
                                         {
@@ -114,8 +126,8 @@
                                                                                                     text =
                                                                                                         ''
                                                                                                             OUT=/build/test
-                                                                                                            COMPILE_TIME_ARGUMENTS="$( cat ${ builtins.toFile "compile-time-arguments.json" ( builtins.toJSON compile-time-arguments ) } )" || exit ${ builtins.toString unplanned-error }
-                                                                                                            RUN_TIME_ARGUMENTS="$( cat ${ builtins.toFile "run-time-arguments.json" ( builtins.toJSON run-time-arguments ) } )" || exit ${ builtins.toString unplanned-error }
+                                                                                                            COMPILE_TIME_ARGUMENTS="$( cat ${ builtins.toFile "compile-time-arguments.json" ( _config.visitor compile-time-arguments ) } )" || exit ${ builtins.toString unplanned-error }
+                                                                                                            RUN_TIME_ARGUMENTS="$( cat ${ builtins.toFile "run-time-arguments.json" ( _config.visitor run-time-arguments ) } )" || exit ${ builtins.toString unplanned-error }
                                                                                                             mkdir --parents "$OUT/expected"
                                                                                                             jq \
                                                                                                                 --null-input \
@@ -144,7 +156,7 @@
                                                                                                 }
                                                                                         )
                                                                                     ] ;
-                                                                                imports = [ implementation ] ;
+                                                                                imports = [ implementation visitor ] ;
                                                                             } ;
                                                             testScript =
                                                                 ''
