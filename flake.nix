@@ -71,19 +71,7 @@
                                             compile-time-arguments ,
                                             shell-application ,
                                             planned-error ,
-                                            visitor ?
-                                                { lib , ... } :
-                                                    let
-                                                        _lib = lib-identity lib ;
-                                                        in
-                                                            {
-                                                                visitor =
-                                                                    _lib.options.visitor.mkOption
-                                                                        {
-                                                                            default = { ... } : { ... } : builtins.toJSON ;
-                                                                            type = _lib.types.functionTo ( _lib.types.functionTo _lib.types.anything ) ;
-                                                                        } ;
-                                                            } ,
+                                            visitor ,
                                             unplanned-error
                                         } :
                                         {
