@@ -6,93 +6,156 @@
         { self } :
             {
                 lib =
-                    {
-                        coreutils ,
-                        error-planned ? 64 ,
-                        error-unplanned ? 65 ,
-                        jq ,
-                        mkDerivation ,
-                        writeShellApplication ,
-                        visitor ,
-                        yq-go
-                    } :
+                    { input ? null , output ? null } :
                         let
-                            _visitor = visitor.lib { default = path : value : let type = builtins.typeOf value ; in { path = path ; type = type ; value = if type == "lambda" then null else value ; } ; } ;
                             implementation =
-                                compile-time-arguments :
-                                    writeShellApplication
-                                        {
-                                            name = "failure" ;
-                                            runtimeInputs = [ coreutils jq yq-go ] ;
-                                            text =
-                                                ''
-                                                    export COMPILE_TIME_ARGUMENTS_JSON='${ builtins.toJSON ( _visitor.implementation { } compile-time-arguments ) }'
-                                                    RUN_TIME_ARGUMENTS_JSON="$( printf '%s\n' "$@" | jq -R . | jq -s . )" || exit ${ builtins.toString error-unplanned }
-                                                    export RUN_TIME_ARGUMENTS_JSON
-                                                    yq \
-                                                        eval \
-                                                        --null-input \
-                                                        --prettyPrint \
-                                                        '{ "compile-time-arguments" : env(COMPILE_TIME_ARGUMENTS_JSON) , "run-time-arguments" : env(RUN_TIME_ARGUMENTS_JSON) }' >&2
-                                                    exit ${ builtins.toString error-planned }
-                                                '' ;
-                                        } ;
+                                { lib , pkgs , ... } @module :
+                                    let
+                                        identified =
+                                            if builtins.typeOf input == "lambda" then input module
+                                            else if builtins.typeOf input == "null" then module
+                                            else builtins.throw "7620614191526061" ;
+                                        in
+                                            with identified ;
+                                                {
+                                                    options =
+                                                        {
+                                                            failure =
+                                                                lib.mkOption
+                                                                    {
+                                                                        default =
+                                                                            {
+                                                                                compile-time-arguments ? null ,
+                                                                                planned-error ? 176 ,
+                                                                                unplanned-error ? 118
+                                                                            } :
+                                                                                pkgs.writeShellApplication
+                                                                                    {
+                                                                                        name = "failure" ;
+                                                                                        runtimeInputs = [ pkgs.coreutils pkgs.jq ] ;
+                                                                                        text =
+                                                                                            ''
+                                                                                                COMPILE_TIME_ARGUMENTS="$( cat ${ builtins.toFile "compile-time-arguments.json" ( builtins.toJSON compile-time-arguments ) } )" || exit ${ builtins.toString unplanned-error }
+                                                                                                jq \
+                                                                                                    --null-input \
+                                                                                                    --argjson COMPILE_TIME_ARGUMENTS "$COMPILE_TIME_ARGUMENTS" \
+                                                                                                    --args \
+                                                                                                    '{
+                                                                                                        "arguments" :
+                                                                                                            {
+                                                                                                                "compile" : $COMPILE_TIME_ARGUMENTS ,
+                                                                                                                "run" : $ARGS.positional
+                                                                                                            } ,
+                                                                                                        "inputs" : { }
+                                                                                                    }' -- "$@" >&2
+                                                                                                exit ${ builtins.toString planned-error }
+                                                                                            '' ;
+                                                                                    } ;
+                                                                        type = lib.types.functionTo lib.types.package ;
+                                                                    } ;
+                                                        } ;
+                                                } ;
                             in
                                 {
                                     check =
                                         {
-                                            compile-time-arguments ? null ,
-                                            diffutil ,
-                                            expected-standard-error ,
+                                            nixosTest ,
+                                            obviated-by
+                                        } :
+                                        {
+                                            compile-time-arguments ,
+                                            planned-error ,
+                                            unplanned-error
+                                        } :
+                                        {
                                             run-time-arguments ? [ ]
                                         } :
-                                            mkDerivation
-                                                {
-                                                    installPhase =
-                                                        let
-                                                            test =
-                                                                writeShellApplication
-                                                                    {
-                                                                        name = "test" ;
-                                                                        runtimeInputs = [ coreutils yq-go ( implementation compile-time-arguments ) ] ;
-                                                                        text =
-                                                                            ''
-                                                                                OUT="$1"
-                                                                                touch "$OUT"
-                                                                                mkdir --parents /build/test
-                                                                                if failure ${ builtins.concatStringsSep " " run-time-arguments } > /build/test/standard-output 2> /build/test/standard-error
-                                                                                then
-                                                                                    STATUS="$?"
-                                                                                else
-                                                                                    STATUS="$?"
-                                                                                fi
-                                                                                STANDARD_OUTPUT="$( cat /build/test/standard-output )" || exit ${ builtins.toString error-unplanned }
-                                                                                if [[ -n "$STANDARD_OUTPUT" ]]
-                                                                                then
-                                                                                    echo "We expected no standard output but we got $STANDARD_OUTPUT" >&2
-                                                                                    exit ${ builtins.toString error-planned }
-                                                                                fi
-                                                                                if ! diff --unified ${ builtins.toFile "standard-error"  expected-standard-error } /build/test/standard-error
-                                                                                then
-                                                                                    echo "We expected standard error to be ${ builtins.toFile "standard-error" expected-standard-error } but it was:" >&2
-                                                                                    cat /build/test/standard-error >&2
-                                                                                    exit ${ builtins.toString error-planned }
-                                                                                fi
-                                                                                if [[ "$STATUS" != "64" ]]
-                                                                                then
-                                                                                    echo "We expected the status to be 64 but we got $STATUS" >&2
-                                                                                    exit ${ builtins.toString error-planned }
-                                                                                fi
-                                                                            '' ;
-                                                                    } ;
-                                                            in
+                                            let
+                                                test =
+                                                    nixosTest
+                                                        {
+                                                            name = "failure" ;
+                                                            nodes.client =
+                                                                { config , pkgs , ... } @module :
+                                                                    let
+                                                                        identified =
+                                                                            if builtins.typeOf input == "lambda" then input module
+                                                                            else if builtins.typeOf input == "null" then module
+                                                                            else builtins.throw "8398410649635682" ;
+                                                                        in
+                                                                            with identified ;
+                                                                                {
+                                                                                    environment.systemPackages =
+                                                                                        [
+                                                                                            (
+                                                                                                pkgs.writeShellApplication
+                                                                                                    {
+                                                                                                        name = "test-script" ;
+                                                                                                        runtimeInputs =
+                                                                                                            [
+                                                                                                                pkgs.coreutils
+                                                                                                                pkgs.diffutils
+                                                                                                                pkgs.jq
+                                                                                                                (
+                                                                                                                    config.failure
+                                                                                                                        {
+                                                                                                                            compile-time-arguments = compile-time-arguments ;
+                                                                                                                            planned-error = planned-error ;
+                                                                                                                            unplanned-error = unplanned-error ;
+                                                                                                                        }
+                                                                                                                )
+                                                                                                            ] ;
+                                                                                                        text =
+                                                                                                            ''
+                                                                                                                OUT=/build/test
+                                                                                                                COMPILE_TIME_ARGUMENTS="$( cat ${ builtins.toFile "compile-time-arguments.json" ( builtins.toJSON compile-time-arguments ) } )" || exit ${ builtins.toString unplanned-error }
+                                                                                                                RUN_TIME_ARGUMENTS="$( cat ${ builtins.toFile "run-time-arguments.json" ( builtins.toJSON run-time-arguments ) } )" || exit ${ builtins.toString unplanned-error }
+                                                                                                                mkdir --parents "$OUT/expected"
+                                                                                                                jq \
+                                                                                                                    --null-input \
+                                                                                                                    --sort-keys \
+                                                                                                                    --argjson COMPILE_TIME_ARGUMENTS "$COMPILE_TIME_ARGUMENTS" \
+                                                                                                                    --argjson RUN_TIME_ARGUMENTS "$RUN_TIME_ARGUMENTS" \
+                                                                                                                    '{
+                                                                                                                        "arguments" :
+                                                                                                                            {
+                                                                                                                                "compile" : $COMPILE_TIME_ARGUMENTS ,
+                                                                                                                                "run" : $RUN_TIME_ARGUMENTS
+                                                                                                                            } ,
+                                                                                                                        "inputs" : { }
+                                                                                                                    }' > "$OUT/expected/standard-error"
+                                                                                                                echo -n "" > "$OUT/expected/standard-output"
+                                                                                                                echo -n ${ builtins.toString planned-error } > "$OUT/expected/status"
+                                                                                                                mkdir --parents "$OUT/observed"
+                                                                                                                if failure ${ builtins.concatStringsSep " " run-time-arguments } > "$OUT/observed/standard-output" 2> "$OUT/observed/standard-error"
+                                                                                                                then
+                                                                                                                    echo -n "$?" > "$OUT/observed/status"
+                                                                                                                else
+                                                                                                                    echo -n "$?" > "$OUT/observed/status"
+                                                                                                                fi
+                                                                                                                diff --unified "$OUT/expected" "$OUT/observed"
+                                                                                                            '' ;
+                                                                                                    }
+                                                                                            )
+                                                                                        ] ;
+                                                                                    imports = [ implementation ] ;
+                                                                                } ;
+                                                            testScript =
                                                                 ''
-                                                                    ${ test }/bin/test "$out"
+                                                                    client.wait_for_unit("multi-user.target")
+                                                                    client.succeed("test-script")
                                                                 '' ;
-                                                    name = "check" ;
-                                                    src = ./. ;
-                                                } ;
-                                    implementation = implementation ;
+                                                        } ;
+                                                in
+                                                    {
+                                                        obviated-by = obviated-by ;
+                                                        test = test ;
+                                                        type = "failure" ;
+                                                    } ;
+                                    implementation =
+                                        if builtins.typeOf output == "lambda" then output implementation
+                                        else if builtins.typeOf output == "null" then implementation
+                                        else builtins.throw "8918826447579212" ;
                                 } ;
             } ;
 }
